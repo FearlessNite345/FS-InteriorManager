@@ -1,0 +1,16 @@
+{
+	"name": "whitigol-fivem-lua-template",
+	"type": "module",
+	"scripts": {
+		"build": "wfm",
+		"build:client": "wfm build --skip-server",
+		"build:server": "wfm build --skip-client",
+		"dev": "wfm --watch",
+		"dev:client": "wfm --watch --skip-server",
+		"dev:server": "wfm --watch --skip-client",
+		"ui": "wfm --ui-command"
+	},
+	"devDependencies": {
+		"@whitigol/fivem-compiler": "latest"
+	}
+}
