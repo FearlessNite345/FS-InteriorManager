@@ -48,6 +48,17 @@ for _, interior in pairs(Config.Interiors) do
 
         activeInteriors[interior.id] = interiorHandle
         local currentSet = GlobalState["interior:" .. interior.id] or ""
+        if type(currentSet) ~= "table" or next(currentSet) == nil then
+            currentSet = {}
+            if interior.defaults then
+                for _, setName in ipairs(interior.defaults.sets or {}) do
+                    currentSet[setName] = true
+                end
+                for _, iplName in ipairs(interior.defaults.ipls or {}) do
+                    currentSet[iplName] = true
+                end
+            end
+        end
         ApplyInteriorConfig(interiorHandle, currentSet, interior.entitySets, interior.ipls)
     end)
 
@@ -57,6 +68,38 @@ for _, interior in pairs(Config.Interiors) do
             ApplyInteriorConfig(interiorHandle, value, interior.entitySets, interior.ipls)
         end
     end)
+end
+
+for _, folder in pairs(Config.InteriorFolders) do
+    for _, interior in pairs(folder.interiors) do
+        CreateThread(function()
+            local interiorHandle = GetInteriorAtCoords(interior.coords.x, interior.coords.y, interior.coords.z)
+            print("Interior handle for", interior.id, "is", interiorHandle)
+            while not IsInteriorReady(interiorHandle) do Wait(100) end
+
+            activeInteriors[interior.id] = interiorHandle
+            local currentSet = GlobalState["interior:" .. interior.id] or ""
+            if type(currentSet) ~= "table" or next(currentSet) == nil then
+                currentSet = {}
+                if interior.defaults then
+                    for _, setName in ipairs(interior.defaults.sets or {}) do
+                        currentSet[setName] = true
+                    end
+                    for _, iplName in ipairs(interior.defaults.ipls or {}) do
+                        currentSet[iplName] = true
+                    end
+                end
+            end
+            ApplyInteriorConfig(interiorHandle, currentSet, interior.entitySets, interior.ipls)
+        end)
+
+        AddStateBagChangeHandler("interior:" .. interior.id, "", function(_, _, value)
+            local interiorHandle = activeInteriors[interior.id]
+            if interiorHandle then
+                ApplyInteriorConfig(interiorHandle, value, interior.entitySets, interior.ipls)
+            end
+        end)
+    end
 end
 
 
@@ -94,6 +137,17 @@ function ShowEntitySetMenu(interior)
     local submenuOptions = {}
     local currentSet = GlobalState["interior:" .. interior.id]
     if type(currentSet) ~= "table" then currentSet = {} end -- normalize for consistency
+
+    table.insert(submenuOptions, {
+        title = "[Teleport to " .. interior.name .. "]",
+        description = "Will teleport you to the interior",
+        onSelect = function()
+            local playerPed = PlayerPedId()
+            local coords = interior.coords
+            SetEntityCoords(playerPed, coords.x, coords.y, coords.z, false, false, false, true)
+            ShowEntitySetMenu(interior)
+        end
+    })
 
     if interior.presets then
         table.insert(submenuOptions, {
@@ -141,12 +195,22 @@ function ShowEntitySetMenu(interior)
         end
     })
 
-    lib.registerContext({
-        id = 'sub_' .. interior.id,
-        title = interior.name,
-        menu = 'entitysetloader_menu',
-        options = submenuOptions
-    })
+    if interior.folder then
+        lib.registerContext({
+            id = 'sub_' .. interior.id,
+            title = interior.name,
+            menu = 'folder_' .. interior.folder,
+            options = submenuOptions
+        })
+    else
+        lib.registerContext({
+            id = 'sub_' .. interior.id,
+            title = interior.name,
+            menu = 'entitysetloader_menu',
+            options = submenuOptions
+        })
+    end
+
 
     lib.showContext('sub_' .. interior.id)
 end
@@ -185,34 +249,76 @@ TriggerEvent("chat:addSuggestion", "/" .. Config.menuCommand, "Will open the Int
 
 RegisterCommand(Config.menuCommand, function()
     lib.callback('interiors:checkPerms', false, function(allowed)
-        local submenus = {}
+        local menuOptions = {}
 
-        for _, interior in pairs(Config.Interiors) do
-            local interiorCopy = interior
-
-            if not interior.adminOnly or allowed then
-                table.insert(submenus, {
-                    title = interior.name,
-                    description = 'Change entity sets for this interior',
-                    onSelect = function()
-                        ShowEntitySetMenu(interiorCopy)
+        -- Add interior folders first
+        if Config.InteriorFolders and #Config.InteriorFolders > 0 then
+            for _, folder in ipairs(Config.InteriorFolders) do
+                local folderOptions = {}
+                for _, interior in ipairs(folder.interiors or {}) do
+                    interior.folder = folder.folder
+                    if not interior.adminOnly or allowed then
+                        table.insert(folderOptions, {
+                            title = interior.name,
+                            description = "Change entity sets for this interior",
+                            onSelect = function()
+                                ShowEntitySetMenu(interior)
+                            end
+                        })
+                    else
+                        table.insert(folderOptions, {
+                            title = interior.name,
+                            description = "Only admins can use this",
+                            disabled = true
+                        })
                     end
-                })
-            elseif not allowed then
-                table.insert(submenus, {
-                    title = interior.name,
-                    description = 'Only admins can use this',
-                    disabled = true
+                end
+                table.insert(menuOptions, {
+                    title = "[" .. folder.folder .. "]",
+                    description = "Interiors under " .. folder.folder,
+                    onSelect = function()
+                        lib.registerContext({
+                            id = "folder_" .. folder.folder,
+                            title = "[" .. folder.folder .. "]",
+                            menu = 'entitysetloader_menu',
+                            options = folderOptions
+                        })
+                        lib.showContext("folder_" .. folder.folder)
+                    end
                 })
             end
         end
 
-        lib.registerContext({
-            id = 'entitysetloader_menu',
-            title = 'Interior Entity Sets',
-            options = submenus
-        })
+        -- Add individual interiors defined in Config.Interiors
+        if Config.Interiors and #Config.Interiors > 0 then
+            for _, interior in ipairs(Config.Interiors) do
+                if not interior.adminOnly or allowed then
+                    table.insert(menuOptions, {
+                        title = interior.name,
+                        description = "Change entity sets for this interior",
+                        onSelect = function()
+                            ShowEntitySetMenu(interior)
+                        end
+                    })
+                else
+                    table.insert(menuOptions, {
+                        title = interior.name,
+                        description = "Only admins can use this",
+                        disabled = true
+                    })
+                end
+            end
+        end
 
-        lib.showContext('entitysetloader_menu')
+        if #menuOptions == 0 then
+            menuOptions = { { title = "No interiors available", disabled = true } }
+        end
+
+        lib.registerContext({
+            id = "entitysetloader_menu",
+            title = "Interior Manager",
+            options = menuOptions
+        })
+        lib.showContext("entitysetloader_menu")
     end)
 end, false)

@@ -46,4 +46,4 @@ lib.callback.register('interiors:checkPerms', function(source)
     return IsPlayerAceAllowed(source, Config.acePermissionForAdmin)
 end)
 
-exports['FS-Lib']:VersionCheck('FS-InteriorManager', 'fearlessnite345/FS-InteriorManagerVersion')
+exports['FS-Lib']:VersionCheck('FS-InteriorManager', 'fearlessnite345/FS-InteriorManager')

@@ -4,7 +4,7 @@ lua54 'yes'
 
 author 'FearlessStudios'
 description 'FS-EntitySetLoader by FearlessStudios'
-version '1.0.0'
+version '1.1.0'
 
 escrow_ignore 'config.lua'
 
