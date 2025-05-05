@@ -181,7 +181,9 @@ function ShowPresetMenu(interior)
     lib.showContext('sub_presets_' .. interior.id)
 end
 
-RegisterCommand("interiormanager", function()
+TriggerEvent("chat:addSuggestion", "/" .. Config.menuCommand, "Will open the Interior Manager menu")
+
+RegisterCommand(Config.menuCommand, function()
     lib.callback('interiors:checkPerms', false, function(allowed)
         local submenus = {}
 

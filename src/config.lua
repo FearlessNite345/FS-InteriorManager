@@ -1,7 +1,12 @@
 Config = {}
 
+-- Command to open the interior manager
 Config.menuCommand = 'interiormanager'
 
+-- ACE permission required for admin-level interior modifications
+Config.acePermissionForAdmin = 'entitysetloader.access'
+
+-- List of interiors available in the system.
 Config.Interiors = {
     {
         id = "prompts_sandy_church",
