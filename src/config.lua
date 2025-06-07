@@ -6,6 +6,8 @@ Config.menuCommand = 'interiormanager'
 -- ACE permission required for admin-level interior modifications
 Config.acePermissionForAdmin = 'entitysetloader.access'
 
+-- The interiors below are provided as preconfigured samples. Remove them if you already have your own interior configurations.
+
 Config.InteriorFolders = {
     {
         folder = "Sandy Houses",
@@ -1089,6 +1091,86 @@ Config.InteriorFolders = {
                         },
                         ipls = {}
                     }
+                }
+            }
+        }
+    },
+    {
+        folder = "Repair Garages",
+        interiors = {
+            {
+                id = "prompts_repair_garage1",
+                name = "Paleto Repair Garage",
+                coords = vec3(-292.54, 6042.77, 32.21),
+                adminOnly = false,
+                defaults = {
+                    sets = {
+                        "1",
+                    }
+                },
+                entitySets = {
+                    { label = "Dirty", set = "1" },
+                    { label = "Clean", set = "2" }
+                }
+            },
+            {
+                id = "prompts_repair_garage2",
+                name = "City Repair Garage",
+                coords = vec3(990.01, -1393.61, 32.43),
+                adminOnly = false,
+                defaults = {
+                    sets = {
+                        "1",
+                    }
+                },
+                entitySets = {
+                    { label = "Dirty", set = "1" },
+                    { label = "Clean", set = "2" }
+                }
+            },
+            {
+                id = "prompts_repair_garage3",
+                name = "Chumash Repair Garage",
+                coords = vec3(-2969.34, 438.79, 17.16),
+                adminOnly = false,
+                defaults = {
+                    sets = {
+                        "1",
+                    }
+                },
+                entitySets = {
+                    { label = "Dirty", set = "1" },
+                    { label = "Clean", set = "2" }
+                }
+            },
+            {
+                id = "prompts_repair_garage4",
+                name = "Highway Repair Garage",
+                coords = vec3(2573.65, 481.06, 109.83),
+                adminOnly = false,
+                defaults = {
+                    sets = {
+                        "1",
+                    }
+                },
+                entitySets = {
+                    { label = "Dirty", set = "1" },
+                    { label = "Clean", set = "2" }
+                }
+            },
+            {
+                id = "prompts_repair_garage5",
+                name = "Beach Repair Garage",
+                coords = vec3(-1645.78, -794.85, 11.17),
+                adminOnly = false,
+                defaults = {
+                    sets = {
+                        "1",
+                    }
+                },
+                entitySets = {
+                    { label = "Dirty", set = "1" },
+                    { label = "Clean", set = "2" }
                 }
             }
         }
