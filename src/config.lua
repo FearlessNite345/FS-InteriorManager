@@ -1,5 +1,9 @@
 Config = {}
 
+-- Print verbose debug information in the client console
+-- Set to true if you want to see interior loading logs
+Config.debug = false
+
 -- Command to open the interior manager
 Config.menuCommand = 'interiormanager'
 

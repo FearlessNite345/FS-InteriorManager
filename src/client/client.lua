@@ -44,7 +44,9 @@ for _, interior in pairs(Config.Interiors) do
     local thisInterior = interior
     CreateThread(function()
         local interiorHandle = GetInteriorAtCoords(thisInterior.coords.x, thisInterior.coords.y, thisInterior.coords.z)
-        print("Interior handle for", thisInterior.id, "is", interiorHandle)
+        if Config.debug then
+            print("Interior handle for", thisInterior.id, "is", interiorHandle)
+        end
         while not IsInteriorReady(interiorHandle) do Wait(100) end
 
         activeInteriors[thisInterior.id] = interiorHandle
@@ -76,7 +78,9 @@ for _, folder in pairs(Config.InteriorFolders) do
         local thisInterior = interior
         CreateThread(function()
             local interiorHandle = GetInteriorAtCoords(thisInterior.coords.x, thisInterior.coords.y, thisInterior.coords.z)
-            print("Interior handle for", thisInterior.id, "is", interiorHandle)
+            if Config.debug then
+                print("Interior handle for", thisInterior.id, "is", interiorHandle)
+            end
             while not IsInteriorReady(interiorHandle) do Wait(100) end
 
             activeInteriors[thisInterior.id] = interiorHandle
