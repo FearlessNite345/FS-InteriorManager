@@ -41,62 +41,64 @@ function ApplyInteriorConfig(interiorId, selected, allSets, allIpls)
 end
 
 for _, interior in pairs(Config.Interiors) do
+    local thisInterior = interior
     CreateThread(function()
-        local interiorHandle = GetInteriorAtCoords(interior.coords.x, interior.coords.y, interior.coords.z)
-        print("Interior handle for", interior.id, "is", interiorHandle)
+        local interiorHandle = GetInteriorAtCoords(thisInterior.coords.x, thisInterior.coords.y, thisInterior.coords.z)
+        print("Interior handle for", thisInterior.id, "is", interiorHandle)
         while not IsInteriorReady(interiorHandle) do Wait(100) end
 
-        activeInteriors[interior.id] = interiorHandle
-        local currentSet = GlobalState["interior:" .. interior.id] or ""
+        activeInteriors[thisInterior.id] = interiorHandle
+        local currentSet = GlobalState["interior:" .. thisInterior.id] or ""
         if type(currentSet) ~= "table" or next(currentSet) == nil then
             currentSet = {}
-            if interior.defaults then
-                for _, setName in ipairs(interior.defaults.sets or {}) do
+            if thisInterior.defaults then
+                for _, setName in ipairs(thisInterior.defaults.sets or {}) do
                     currentSet[setName] = true
                 end
-                for _, iplName in ipairs(interior.defaults.ipls or {}) do
+                for _, iplName in ipairs(thisInterior.defaults.ipls or {}) do
                     currentSet[iplName] = true
                 end
             end
         end
-        ApplyInteriorConfig(interiorHandle, currentSet, interior.entitySets, interior.ipls)
+        ApplyInteriorConfig(interiorHandle, currentSet, thisInterior.entitySets, thisInterior.ipls)
     end)
 
-    AddStateBagChangeHandler("interior:" .. interior.id, "", function(_, _, value)
-        local interiorHandle = activeInteriors[interior.id]
+    AddStateBagChangeHandler("interior:" .. thisInterior.id, "", function(_, _, value)
+        local interiorHandle = activeInteriors[thisInterior.id]
         if interiorHandle then
-            ApplyInteriorConfig(interiorHandle, value, interior.entitySets, interior.ipls)
+            ApplyInteriorConfig(interiorHandle, value, thisInterior.entitySets, thisInterior.ipls)
         end
     end)
 end
 
 for _, folder in pairs(Config.InteriorFolders) do
     for _, interior in pairs(folder.interiors) do
+        local thisInterior = interior
         CreateThread(function()
-            local interiorHandle = GetInteriorAtCoords(interior.coords.x, interior.coords.y, interior.coords.z)
-            print("Interior handle for", interior.id, "is", interiorHandle)
+            local interiorHandle = GetInteriorAtCoords(thisInterior.coords.x, thisInterior.coords.y, thisInterior.coords.z)
+            print("Interior handle for", thisInterior.id, "is", interiorHandle)
             while not IsInteriorReady(interiorHandle) do Wait(100) end
 
-            activeInteriors[interior.id] = interiorHandle
-            local currentSet = GlobalState["interior:" .. interior.id] or ""
+            activeInteriors[thisInterior.id] = interiorHandle
+            local currentSet = GlobalState["interior:" .. thisInterior.id] or ""
             if type(currentSet) ~= "table" or next(currentSet) == nil then
                 currentSet = {}
-                if interior.defaults then
-                    for _, setName in ipairs(interior.defaults.sets or {}) do
+                if thisInterior.defaults then
+                    for _, setName in ipairs(thisInterior.defaults.sets or {}) do
                         currentSet[setName] = true
                     end
-                    for _, iplName in ipairs(interior.defaults.ipls or {}) do
+                    for _, iplName in ipairs(thisInterior.defaults.ipls or {}) do
                         currentSet[iplName] = true
                     end
                 end
             end
-            ApplyInteriorConfig(interiorHandle, currentSet, interior.entitySets, interior.ipls)
+            ApplyInteriorConfig(interiorHandle, currentSet, thisInterior.entitySets, thisInterior.ipls)
         end)
 
-        AddStateBagChangeHandler("interior:" .. interior.id, "", function(_, _, value)
-            local interiorHandle = activeInteriors[interior.id]
+        AddStateBagChangeHandler("interior:" .. thisInterior.id, "", function(_, _, value)
+            local interiorHandle = activeInteriors[thisInterior.id]
             if interiorHandle then
-                ApplyInteriorConfig(interiorHandle, value, interior.entitySets, interior.ipls)
+                ApplyInteriorConfig(interiorHandle, value, thisInterior.entitySets, thisInterior.ipls)
             end
         end)
     end
