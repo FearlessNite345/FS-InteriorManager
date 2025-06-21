@@ -221,10 +221,10 @@ function ShowPresetMenu(interior)
     for _, preset in ipairs(interior.presets or {}) do
         table.insert(presetOptions, {
             title = preset.label,
-            description = "Activate: " .. table.concat(preset.sets, ", "),
+            description = "Activate: " .. table.concat(preset.sets or {}, ", "),
             onSelect = function()
                 TriggerServerEvent("entityset:toggle", interior.id, {
-                    sets = preset.sets,
+                    sets = preset.sets or {},
                     ipls = preset.ipls
                 })
 
