@@ -3,7 +3,7 @@ game 'gta5'
 lua54 'yes'
 
 author 'FearlessStudios'
-description 'FS-EntitySetLoader by FearlessStudios'
+description 'FS-InteriorManager by FearlessStudios'
 version '1.1.1'
 
 escrow_ignore 'config.lua'
