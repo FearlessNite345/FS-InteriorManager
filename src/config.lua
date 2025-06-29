@@ -66,7 +66,7 @@ Config.InteriorFolders = {
                     { label = "Wall Frame 1",         set = "wallframe1" },
                     { label = "Wall Frame 2",         set = "wallframe2" },
                     { label = "Upper Frame",          set = "upframe" },
-                    { label = "Radiator Place",       set = "radiatorplace" },
+                    { label = "Radiator Place",       set = "radiatorplace", hidden = true },
                     { label = "Fireplace",            set = "fireplace" },
                 },
                 presets = {

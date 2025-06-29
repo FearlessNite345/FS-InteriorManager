@@ -61,6 +61,10 @@ for _, interior in pairs(Config.Interiors) do
                     currentSet[iplName] = true
                 end
             end
+            TriggerServerEvent("entityset:toggle", thisInterior.id, {
+                sets = thisInterior.defaults and thisInterior.defaults.sets or {},
+                ipls = thisInterior.defaults and thisInterior.defaults.ipls or {}
+            })
         end
         ApplyInteriorConfig(interiorHandle, currentSet, thisInterior.entitySets, thisInterior.ipls)
     end)
@@ -95,6 +99,10 @@ for _, folder in pairs(Config.InteriorFolders) do
                         currentSet[iplName] = true
                     end
                 end
+                TriggerServerEvent("entityset:toggle", thisInterior.id, {
+                    sets = thisInterior.defaults and thisInterior.defaults.sets or {},
+                    ipls = thisInterior.defaults and thisInterior.defaults.ipls or {}
+                })
             end
             ApplyInteriorConfig(interiorHandle, currentSet, thisInterior.entitySets, thisInterior.ipls)
         end)
@@ -115,18 +123,20 @@ function ShowIplMenu(interior)
     if type(currentSet) ~= "table" then currentSet = {} end
 
     for _, ipl in ipairs(interior.ipls or {}) do
-        table.insert(iplOptions, {
-            title = ipl.label,
-            icon = currentSet[ipl.name] and 'fas fa-check' or 'fas fa-times',
-            description = "Toggle " .. ipl.name,
-            onSelect = function()
-                local isActive = currentSet[ipl.name] == true
-                TriggerServerEvent("entityset:toggle_individual", interior.id, ipl.name, not isActive)
-                Wait(waitTime)
-                ShowEntitySetMenu(interior)
-                ShowIplMenu(interior)
-            end
-        })
+        if not ipl.hidden then
+            table.insert(iplOptions, {
+                title = ipl.label,
+                icon = currentSet[ipl.name] and 'fas fa-check' or 'fas fa-times',
+                description = "Toggle " .. ipl.name,
+                onSelect = function()
+                    local isActive = currentSet[ipl.name] == true
+                    TriggerServerEvent("entityset:toggle_individual", interior.id, ipl.name, not isActive)
+                    Wait(waitTime)
+                    ShowEntitySetMenu(interior)
+                    ShowIplMenu(interior)
+                end
+            })
+        end
     end
 
     lib.registerContext({
@@ -177,17 +187,19 @@ function ShowEntitySetMenu(interior)
     end
 
     for _, set in ipairs(interior.entitySets) do
-        table.insert(submenuOptions, {
-            title = set.label,
-            icon = (type(currentSet) == "table" and currentSet[set.set]) and 'fas fa-check' or 'fas fa-times',
-            description = "Toggle " .. set.set,
-            onSelect = function()
-                local isActive = currentSet[set.set] == true
-                TriggerServerEvent("entityset:toggle_individual", interior.id, set.set, not isActive)
-                Wait(waitTime)
-                ShowEntitySetMenu(interior)
-            end
-        })
+        if not set.hidden then
+            table.insert(submenuOptions, {
+                title = set.label,
+                icon = (type(currentSet) == "table" and currentSet[set.set]) and 'fas fa-check' or 'fas fa-times',
+                description = "Toggle " .. set.set,
+                onSelect = function()
+                    local isActive = currentSet[set.set] == true
+                    TriggerServerEvent("entityset:toggle_individual", interior.id, set.set, not isActive)
+                    Wait(waitTime)
+                    ShowEntitySetMenu(interior)
+                end
+            })
+        end
     end
 
     table.insert(submenuOptions, {
