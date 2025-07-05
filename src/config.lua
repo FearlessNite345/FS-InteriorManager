@@ -1266,6 +1266,11 @@ Config.Interiors = {
         name = "Logistics Interior",
         coords = vec3(1885.3466, 3147.4792, 44.6878),
         adminOnly = true,
+        defaults = {
+            sets = {
+                "gcom_lc_garage_1"
+            }
+        },
         entitySets = {
             { label = "Default Garage",      set = "gcom_lc_garage_1" },
             { label = "Garage with Storage", set = "gcom_lc_garage_2" }

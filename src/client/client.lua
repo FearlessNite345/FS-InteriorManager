@@ -1,5 +1,5 @@
 local activeInteriors = {}
-local waitTime = 250
+local waitTime = 350
 
 function ApplyInteriorConfig(interiorId, selected, allSets, allIpls)
     if not interiorId then return end
