@@ -1,11 +1,22 @@
 local activeInteriors = {}
-local waitTime = 350
 
-function ApplyInteriorConfig(interiorId, selected, allSets, allIpls)
+-- ==========
+-- Utilities
+-- ==========
+local function pushStateUpdate(interiorId, newState)
+    SendNUIMessage({
+        action = "stateUpdate",
+        data   = {
+            id    = interiorId,
+            state = (type(newState) == "table") and newState or {}
+        }
+    })
+end
+
+local function ApplyInteriorConfig(interiorId, selected, allSets, allIpls)
     if not interiorId then return end
 
     local selectedSets = {}
-
     if type(selected) == "string" and selected ~= "" then
         selectedSets[selected] = true
     elseif type(selected) == "table" then
@@ -18,7 +29,7 @@ function ApplyInteriorConfig(interiorId, selected, allSets, allIpls)
         end
     end
 
-    -- Apply entity sets
+    -- entity sets
     for _, set in pairs(allSets or {}) do
         if selectedSets[set.set] then
             ActivateInteriorEntitySet(interiorId, set.set)
@@ -30,7 +41,7 @@ function ApplyInteriorConfig(interiorId, selected, allSets, allIpls)
     RefreshInterior(interiorId)
     Wait(100)
 
-    -- Apply IPLs
+    -- IPLs
     for _, ipl in ipairs(allIpls or {}) do
         if selectedSets[ipl.name] then
             RequestIpl(ipl.name)
@@ -40,303 +51,211 @@ function ApplyInteriorConfig(interiorId, selected, allSets, allIpls)
     end
 end
 
-for _, interior in pairs(Config.Interiors) do
+-- ==========================================
+-- Build a UI snapshot from current config
+-- ==========================================
+local function buildUiSnapshot(allowed)
+    local function currentState(id)
+        local st = GlobalState["interior:" .. id]
+        if type(st) ~= "table" then st = {} end
+        return st
+    end
+
+    local interiors = {}
+    for _, it in ipairs(Config.Interiors or {}) do
+        interiors[#interiors + 1] = {
+            id         = it.id,
+            name       = it.name,
+            coords     = it.coords,
+            adminOnly  = it.adminOnly or false,
+            entitySets = it.entitySets or {},
+            ipls       = it.ipls or {},
+            presets    = it.presets or {},
+            state      = currentState(it.id)
+        }
+    end
+
+    local folders = {}
+    for _, folder in ipairs(Config.InteriorFolders or {}) do
+        local list = {}
+        for _, it in ipairs(folder.interiors or {}) do
+            list[#list + 1] = {
+                id         = it.id,
+                name       = it.name,
+                coords     = it.coords,
+                adminOnly  = it.adminOnly or false,
+                entitySets = it.entitySets or {},
+                ipls       = it.ipls or {},
+                presets    = it.presets or {},
+                state      = currentState(it.id)
+            }
+        end
+        folders[#folders + 1] = { name = folder.folder, interiors = list }
+    end
+
+    return { title = "Interior Manager", allowed = allowed == true, interiors = interiors, folders = folders }
+end
+
+-- ================================================
+-- Init / hydrate interiors + react to state changes
+-- ================================================
+local function ensureDefaultState(thisInterior, interiorHandle)
+    local currentSet = GlobalState["interior:" .. thisInterior.id]
+    if type(currentSet) ~= "table" or next(currentSet) == nil then
+        currentSet = {}
+        if thisInterior.defaults then
+            for _, setName in ipairs(thisInterior.defaults.sets or {}) do currentSet[setName] = true end
+            for _, iplName in ipairs(thisInterior.defaults.ipls or {}) do currentSet[iplName] = true end
+        end
+        TriggerServerEvent("entityset:toggle", thisInterior.id, {
+            sets = thisInterior.defaults and thisInterior.defaults.sets or {},
+            ipls = thisInterior.defaults and thisInterior.defaults.ipls or {}
+        })
+    end
+    ApplyInteriorConfig(interiorHandle, currentSet, thisInterior.entitySets, thisInterior.ipls)
+end
+
+-- Top-level interiors
+for _, interior in pairs(Config.Interiors or {}) do
     local thisInterior = interior
     CreateThread(function()
-        local interiorHandle = GetInteriorAtCoords(thisInterior.coords.x, thisInterior.coords.y, thisInterior.coords.z)
-        if Config.debug then
-            print("Interior handle for", thisInterior.id, "is", interiorHandle)
-        end
-        while not IsInteriorReady(interiorHandle) do Wait(100) end
+        local h = GetInteriorAtCoords(thisInterior.coords.x, thisInterior.coords.y, thisInterior.coords.z)
+        if Config.debug then print("Interior handle for", thisInterior.id, "is", h) end
+        while not IsInteriorReady(h) do Wait(100) end
 
-        activeInteriors[thisInterior.id] = interiorHandle
-        local currentSet = GlobalState["interior:" .. thisInterior.id] or ""
-        if type(currentSet) ~= "table" or next(currentSet) == nil then
-            currentSet = {}
-            if thisInterior.defaults then
-                for _, setName in ipairs(thisInterior.defaults.sets or {}) do
-                    currentSet[setName] = true
-                end
-                for _, iplName in ipairs(thisInterior.defaults.ipls or {}) do
-                    currentSet[iplName] = true
-                end
-            end
-            TriggerServerEvent("entityset:toggle", thisInterior.id, {
-                sets = thisInterior.defaults and thisInterior.defaults.sets or {},
-                ipls = thisInterior.defaults and thisInterior.defaults.ipls or {}
-            })
-        end
-        ApplyInteriorConfig(interiorHandle, currentSet, thisInterior.entitySets, thisInterior.ipls)
+        activeInteriors[thisInterior.id] = h
+        ensureDefaultState(thisInterior, h)
     end)
 
     AddStateBagChangeHandler("interior:" .. thisInterior.id, "", function(_, _, value)
-        local interiorHandle = activeInteriors[thisInterior.id]
-        if interiorHandle then
-            ApplyInteriorConfig(interiorHandle, value, thisInterior.entitySets, thisInterior.ipls)
+        local h = activeInteriors[thisInterior.id]
+        if h then
+            ApplyInteriorConfig(h, value, thisInterior.entitySets, thisInterior.ipls)
+            pushStateUpdate(thisInterior.id, value)
         end
     end)
 end
 
-for _, folder in pairs(Config.InteriorFolders) do
-    for _, interior in pairs(folder.interiors) do
+-- Foldered interiors
+for _, folder in pairs(Config.InteriorFolders or {}) do
+    for _, interior in pairs(folder.interiors or {}) do
         local thisInterior = interior
         CreateThread(function()
-            local interiorHandle = GetInteriorAtCoords(thisInterior.coords.x, thisInterior.coords.y, thisInterior.coords.z)
-            if Config.debug then
-                print("Interior handle for", thisInterior.id, "is", interiorHandle)
-            end
-            while not IsInteriorReady(interiorHandle) do Wait(100) end
+            local h = GetInteriorAtCoords(thisInterior.coords.x, thisInterior.coords.y, thisInterior.coords.z)
+            if Config.debug then print("Interior handle for", thisInterior.id, "is", h) end
+            while not IsInteriorReady(h) do Wait(100) end
 
-            activeInteriors[thisInterior.id] = interiorHandle
-            local currentSet = GlobalState["interior:" .. thisInterior.id] or ""
-            if type(currentSet) ~= "table" or next(currentSet) == nil then
-                currentSet = {}
-                if thisInterior.defaults then
-                    for _, setName in ipairs(thisInterior.defaults.sets or {}) do
-                        currentSet[setName] = true
-                    end
-                    for _, iplName in ipairs(thisInterior.defaults.ipls or {}) do
-                        currentSet[iplName] = true
-                    end
-                end
-                TriggerServerEvent("entityset:toggle", thisInterior.id, {
-                    sets = thisInterior.defaults and thisInterior.defaults.sets or {},
-                    ipls = thisInterior.defaults and thisInterior.defaults.ipls or {}
-                })
-            end
-            ApplyInteriorConfig(interiorHandle, currentSet, thisInterior.entitySets, thisInterior.ipls)
+            activeInteriors[thisInterior.id] = h
+            ensureDefaultState(thisInterior, h)
         end)
 
         AddStateBagChangeHandler("interior:" .. thisInterior.id, "", function(_, _, value)
-            local interiorHandle = activeInteriors[thisInterior.id]
-            if interiorHandle then
-                ApplyInteriorConfig(interiorHandle, value, thisInterior.entitySets, thisInterior.ipls)
+            local h = activeInteriors[thisInterior.id]
+            if h then
+                ApplyInteriorConfig(h, value, thisInterior.entitySets, thisInterior.ipls)
+                pushStateUpdate(thisInterior.id, value)
             end
         end)
     end
 end
 
+-- ==========================
+-- NUI + Focus (Left Alt)
+-- ==========================
+local UI_OPEN = false
+local FOCUS_GAME = true    -- false = UI has focus
+local KEY_TOGGLE_FOCUS = 19 -- INPUT_CHARACTER_WHEEL (Left Alt)
 
-function ShowIplMenu(interior)
-    local iplOptions = {}
-    local currentSet = GlobalState["interior:" .. interior.id]
-    if type(currentSet) ~= "table" then currentSet = {} end
+local function setUiFocus(hasUi)
+    FOCUS_GAME = not hasUi
+    SetNuiFocus(hasUi, hasUi)
+    SetNuiFocusKeepInput(false)
+    SendNUIMessage({ action = "focus", data = { uiHasFocus = hasUi } })
+end
 
-    for _, ipl in ipairs(interior.ipls or {}) do
-        if not ipl.hidden then
-            table.insert(iplOptions, {
-                title = ipl.label,
-                icon = currentSet[ipl.name] and 'fas fa-check' or 'fas fa-times',
-                description = "Toggle " .. ipl.name,
-                onSelect = function()
-                    local isActive = currentSet[ipl.name] == true
-                    TriggerServerEvent("entityset:toggle_individual", interior.id, ipl.name, not isActive)
-                    Wait(waitTime)
-                    ShowEntitySetMenu(interior)
-                    ShowIplMenu(interior)
+local function openUi(allowed)
+    if UI_OPEN then return end
+    UI_OPEN = true
+    setUiFocus(true)
+    SendNUIMessage({
+        action = "open",
+        data = {
+            payload = buildUiSnapshot(allowed)
+        }
+    })
+
+    -- While UI is open and game has focus, let Left Alt bring focus back to UI
+    CreateThread(function()
+        while UI_OPEN do
+            if FOCUS_GAME then
+                DisableControlAction(0, 200, true) -- block pause key a bit while we watch for Alt
+                if IsControlJustPressed(0, KEY_TOGGLE_FOCUS) then
+                    setUiFocus(true)
                 end
-            })
+            end
+            Wait(0)
         end
-    end
-
-    lib.registerContext({
-        id = 'sub_ipls_' .. interior.id,
-        title = interior.name .. " - IPLs",
-        menu = 'sub_' .. interior.id,
-        options = iplOptions
-    })
-
-    lib.showContext('sub_ipls_' .. interior.id)
+    end)
 end
 
-function ShowEntitySetMenu(interior)
-    local submenuOptions = {}
-    local currentSet = GlobalState["interior:" .. interior.id]
-    if type(currentSet) ~= "table" then currentSet = {} end -- normalize for consistency
-
-    table.insert(submenuOptions, {
-        title = "[Teleport to " .. interior.name .. "]",
-        description = "Will teleport you to the interior",
-        onSelect = function()
-            local playerPed = PlayerPedId()
-            local coords = interior.coords
-            SetEntityCoords(playerPed, coords.x, coords.y, coords.z, false, false, false, true)
-            ShowEntitySetMenu(interior)
-        end
-    })
-
-    if interior.presets then
-        table.insert(submenuOptions, {
-            title = "[Presets]",
-            description = "Apply multiple sets at once",
-            onSelect = function()
-                ShowPresetMenu(interior)
-            end
-        })
-    end
-
-    if interior.ipls then
-        table.insert(submenuOptions, {
-            title = "[IPLs]",
-            description = "Toggle IPLs (map parts)",
-            onSelect = function()
-                ShowEntitySetMenu(interior) -- re-register parent
-                ShowIplMenu(interior)
-            end
-        })
-    end
-
-    for _, set in ipairs(interior.entitySets) do
-        if not set.hidden then
-            table.insert(submenuOptions, {
-                title = set.label,
-                icon = (type(currentSet) == "table" and currentSet[set.set]) and 'fas fa-check' or 'fas fa-times',
-                description = "Toggle " .. set.set,
-                onSelect = function()
-                    local isActive = currentSet[set.set] == true
-                    TriggerServerEvent("entityset:toggle_individual", interior.id, set.set, not isActive)
-                    Wait(waitTime)
-                    ShowEntitySetMenu(interior)
-                end
-            })
-        end
-    end
-
-    table.insert(submenuOptions, {
-        title = "Disable All",
-        icon = (not currentSet or next(currentSet) == nil) and 'fas fa-check' or 'fas fa-times',
-        description = "Turn off all entity sets & ipls",
-        onSelect = function()
-            TriggerServerEvent("entityset:toggle", interior.id, "")
-            Wait(waitTime)
-            ShowEntitySetMenu(interior)
-        end
-    })
-
-    if interior.folder then
-        lib.registerContext({
-            id = 'sub_' .. interior.id,
-            title = interior.name,
-            menu = 'folder_' .. interior.folder,
-            options = submenuOptions
-        })
-    else
-        lib.registerContext({
-            id = 'sub_' .. interior.id,
-            title = interior.name,
-            menu = 'entitysetloader_menu',
-            options = submenuOptions
-        })
-    end
-
-
-    lib.showContext('sub_' .. interior.id)
+local function closeUi()
+    if not UI_OPEN then return end
+    UI_OPEN = false
+    setUiFocus(false)
+    SendNUIMessage({ action = "close" })
 end
 
-function ShowPresetMenu(interior)
-    local presetOptions = {}
+-- NUI callbacks
+RegisterNUICallback("toggleSet", function(data, cb)
+    -- data = { id, set, enabled }
+    TriggerServerEvent("entityset:toggle_individual", data.id, data.set, data.enabled)
+    cb({ ok = true })
+end)
 
-    for _, preset in ipairs(interior.presets or {}) do
-        table.insert(presetOptions, {
-            title = preset.label,
-            description = "Activate: " .. table.concat(preset.sets or {}, ", "),
-            onSelect = function()
-                TriggerServerEvent("entityset:toggle", interior.id, {
-                    sets = preset.sets or {},
-                    ipls = preset.ipls
-                })
+RegisterNUICallback("toggleIpl", function(data, cb)
+    -- data = { id, name, enabled }
+    TriggerServerEvent("entityset:toggle_individual", data.id, data.name, data.enabled)
+    cb({ ok = true })
+end)
 
-                Wait(waitTime)
-                ShowEntitySetMenu(interior)
-                ShowPresetMenu(interior)
-            end
-        })
-    end
+RegisterNUICallback("applyPreset", function(data, cb)
+    -- data = { id, sets, ipls }
+    TriggerServerEvent("entityset:toggle", data.id, { sets = data.sets or {}, ipls = data.ipls })
+    cb({ ok = true })
+end)
 
-    lib.registerContext({
-        id = 'sub_presets_' .. interior.id,
-        title = interior.name .. " - Presets",
-        menu = 'sub_' .. interior.id,
-        options = presetOptions
-    })
+RegisterNUICallback("disableAll", function(data, cb)
+    -- data = { id }
+    TriggerServerEvent("entityset:toggle", data.id, "")
+    cb({ ok = true })
+end)
 
-    lib.showContext('sub_presets_' .. interior.id)
-end
+RegisterNUICallback("teleportTo", function(data, cb)
+    -- data = { coords = {x,y,z} }
+    local ped = PlayerPedId()
+    SetEntityCoords(ped, data.coords.x + 0.0, data.coords.y + 0.0, data.coords.z + 0.0, false, false, false, true)
+    cb({ ok = true })
+end)
 
-TriggerEvent("chat:addSuggestion", "/" .. Config.menuCommand, "Will open the Interior Manager menu")
+RegisterNUICallback("toggleFocus", function(_, cb)
+    setUiFocus(FOCUS_GAME) -- invert
+    cb({ ok = true })
+end)
+
+RegisterNUICallback("close", function(_, cb)
+    closeUi()
+    cb({ ok = true })
+end)
+
+-- ==========================
+-- Open command + perms
+-- ==========================
+TriggerEvent("chat:addSuggestion", "/" .. Config.menuCommand, "Open the Interior Manager")
 
 RegisterCommand(Config.menuCommand, function()
-    lib.callback('interiors:checkPerms', false, function(allowed)
-        local menuOptions = {}
-
-        -- Add interior folders first
-        if Config.InteriorFolders and #Config.InteriorFolders > 0 then
-            for _, folder in ipairs(Config.InteriorFolders) do
-                local folderOptions = {}
-                for _, interior in ipairs(folder.interiors or {}) do
-                    interior.folder = folder.folder
-                    if not interior.adminOnly or allowed then
-                        table.insert(folderOptions, {
-                            title = interior.name,
-                            description = "Change entity sets for this interior",
-                            onSelect = function()
-                                ShowEntitySetMenu(interior)
-                            end
-                        })
-                    else
-                        table.insert(folderOptions, {
-                            title = interior.name,
-                            description = "Only admins can use this",
-                            disabled = true
-                        })
-                    end
-                end
-                table.insert(menuOptions, {
-                    title = "[" .. folder.folder .. "]",
-                    description = "Interiors under " .. folder.folder,
-                    onSelect = function()
-                        lib.registerContext({
-                            id = "folder_" .. folder.folder,
-                            title = "[" .. folder.folder .. "]",
-                            menu = 'entitysetloader_menu',
-                            options = folderOptions
-                        })
-                        lib.showContext("folder_" .. folder.folder)
-                    end
-                })
-            end
-        end
-
-        -- Add individual interiors defined in Config.Interiors
-        if Config.Interiors and #Config.Interiors > 0 then
-            for _, interior in ipairs(Config.Interiors) do
-                if not interior.adminOnly or allowed then
-                    table.insert(menuOptions, {
-                        title = interior.name,
-                        description = "Change entity sets for this interior",
-                        onSelect = function()
-                            ShowEntitySetMenu(interior)
-                        end
-                    })
-                else
-                    table.insert(menuOptions, {
-                        title = interior.name,
-                        description = "Only admins can use this",
-                        disabled = true
-                    })
-                end
-            end
-        end
-
-        if #menuOptions == 0 then
-            menuOptions = { { title = "No interiors available", disabled = true } }
-        end
-
-        lib.registerContext({
-            id = "entitysetloader_menu",
-            title = "Interior Manager",
-            options = menuOptions
-        })
-        lib.showContext("entitysetloader_menu")
-    end)
+    TriggerServerEvent("interiors:checkPerms:request")
 end, false)
+
+RegisterNetEvent("interiors:checkPerms:response", function(allowed)
+    openUi(allowed)
+end)

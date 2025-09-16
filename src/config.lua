@@ -14,7 +14,7 @@ Config.acePermissionForAdmin = 'entitysetloader.access'
 
 Config.InteriorFolders = {
     {
-        folder = "Sandy Houses",
+        folder = "Prompt's Sandy Houses",
         interiors = {
             {
                 id = "prompts_sandy_house1",
@@ -1100,7 +1100,7 @@ Config.InteriorFolders = {
         }
     },
     {
-        folder = "Repair Garages",
+        folder = "Prompt's Repair Garages",
         interiors = {
             {
                 id = "prompts_repair_garage1",
@@ -1178,14 +1178,93 @@ Config.InteriorFolders = {
                 }
             }
         }
+    },
+    {
+        folder = "Prompt's SAHP Stations",
+        interiors = {
+            {
+                id = "prompts_SAHP_Location_1",
+                name = "City SAHP Station",
+                coords = vec3(839.7197, -1291.275, 27.0595),
+                adminOnly = false,
+                defaults = {
+                    sets = {
+                        "chairsandtables",
+                    }
+                },
+                entitySets = {
+                    { label = "Chairs & Tables", set = "chairsandtables" },
+                    { label = "Only Chairs",     set = "onlychairs" }
+                },
+                presets = {
+                    {
+                        label = "Chairs & Tables",
+                        sets = {
+                            "chairsandtables",
+                        },
+                        ipls = {}
+                    },
+                    {
+                        label = "Only Chairs",
+                        sets = {
+                            "onlychairs",
+                        },
+                        ipls = {}
+                    }
+                }
+            },
+            {
+                id = "prompts_SAHP_Location_2",
+                name = "Highway SAHP Station",
+                coords = vec3(1538.29822, 803.9021, 77.9835052),
+                adminOnly = false,
+                defaults = {
+                    sets = {
+                        "chairsandtables",
+                    }
+                },
+                entitySets = {
+                    { label = "Chairs & Tables", set = "chairsandtables" },
+                    { label = "Only Chairs",     set = "onlychairs" }
+                },
+                presets = {
+                    {
+                        label = "Chairs & Tables",
+                        sets = {
+                            "chairsandtables",
+                        },
+                        ipls = {}
+                    },
+                    {
+                        label = "Only Chairs",
+                        sets = {
+                            "onlychairs",
+                        },
+                        ipls = {}
+                    }
+                }
+            }
+        }
     }
 }
 
 -- List of interiors available in the system.
 Config.Interiors = {
     {
+        id = "prompts_sandy_motel",
+        name = "Prompt's Sandy Motel Interior",
+        coords = vec3(1622.02, 3782.31, 25.52),
+        adminOnly = true,
+        defaults = {
+            sets = {}
+        },
+        entitySets = {
+            { label = "Motel Room", set = "room1" },
+        },
+    },
+    {
         id = "prompts_sandy_church",
-        name = "Sandy Church Interior",
+        name = "Prompt's Sandy Church Interior",
         coords = vec3(1790.5172, 3902.3560, 34.6489),
         adminOnly = true,
         entitySets = {
@@ -1196,7 +1275,7 @@ Config.Interiors = {
     },
     {
         id = "prompts_sandy_cityhall",
-        name = "Sandy Cityhall Interior",
+        name = "Prompt's Sandy Cityhall Interior",
         coords = vec3(1753.6223, 3804.6450, 35.4474),
         adminOnly = true,
         ipls = {
@@ -1263,7 +1342,7 @@ Config.Interiors = {
     },
     {
         id = "gcom_logistics",
-        name = "Logistics Interior",
+        name = "Greencom's Logistics Interior",
         coords = vec3(1885.3466, 3147.4792, 44.6878),
         adminOnly = true,
         defaults = {

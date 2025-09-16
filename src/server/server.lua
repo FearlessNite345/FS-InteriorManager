@@ -42,8 +42,11 @@ RegisterNetEvent("entityset:toggle_individual", function(interiorId, key, value)
     GlobalState:set("interior:" .. interiorId, current, true)
 end)
 
-lib.callback.register('interiors:checkPerms', function(source)
-    return IsPlayerAceAllowed(source, Config.acePermissionForAdmin)
+RegisterNetEvent("interiors:checkPerms:request", function()
+    local src = source
+    local allowed = IsPlayerAceAllowed(src, Config.acePermissionForAdmin) == 1
+    TriggerClientEvent("interiors:checkPerms:response", src, allowed)
 end)
+
 
 exports['FS-Lib']:VersionCheck('FS-InteriorManager', 'fearlessnite345/FS-InteriorManager')
