@@ -1,3 +1,8 @@
+# Changelog v1.4.0
+- Added full support for the *Prompts: Sandy Shores Houses – Part 1* update.
+- Fixed an issue where transparency effects weren’t displaying correctly.
+- Introduced a new **Shortcuts** section in the UI, displaying all available hotkeys for quick navigation.
+
 # Changelog v1.3.0
 - Added a brand-new standalone UI.
 - Removed **ox_lib** dependency (script no longer requires ox_lib).

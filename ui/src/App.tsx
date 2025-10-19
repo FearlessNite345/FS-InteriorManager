@@ -4,6 +4,7 @@ import {
   Stack,
   Group,
   Text,
+  Kbd,
   TextInput,
   Switch,
   Button,
@@ -32,7 +33,7 @@ import { DEV_SNAPSHOT } from "./dev-snapshot";
 const UI = {
   radiusLg: 16,
   radiusMd: 12,
-  panel: "rgba(18, 20, 24, 0.82)",
+  panel: "rgba(18, 20, 24, 0.8)",
   panelElevated: "rgba(24, 26, 30, 0.85)",
   glass: "rgba(255, 255, 255, 0.04)",
   stroke: "rgba(255,255,255,0.08)",
@@ -169,24 +170,33 @@ export default function App() {
         handleNuiCallback("toggleFocus");
         return;
       }
-      if (!visibleInteriors.length) return;
+      if (searching ? !visibleInteriors.length : !flattenedAll.length) return;
+
+      const moveFlat = (dir: 1 | -1) => {
+        setUsingKeys(true);
+        // Choose list: while searching, navigate search results; otherwise full list
+        const list = searching ? visibleInteriors : flattenedAll;
+        // Determine current position within chosen list
+        const currentId = activeId ?? visibleInteriors[cursor]?.id ?? null;
+        const curIdx = currentId
+          ? list.findIndex((i) => i.id === currentId)
+          : -1;
+        const nextIdx = Math.min(Math.max(curIdx + dir, 0), list.length - 1);
+        const next = list[nextIdx];
+        if (next) {
+          setActiveId(next.id);
+          // If already visible, sync cursor immediately for smoother highlight
+          const maybeIdx = indexById.get(next.id);
+          if (maybeIdx !== undefined) setCursor(maybeIdx);
+        }
+      };
 
       if (e.key === "ArrowDown") {
         e.preventDefault();
-        setUsingKeys(true);
-        setCursor((c) => {
-          const n = Math.min(c + 1, visibleInteriors.length - 1);
-          setActiveId(visibleInteriors[n]?.id ?? null);
-          return n;
-        });
+        moveFlat(1);
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
-        setUsingKeys(true);
-        setCursor((c) => {
-          const n = Math.max(c - 1, 0);
-          setActiveId(visibleInteriors[n]?.id ?? null);
-          return n;
-        });
+        moveFlat(-1);
       } else if (e.key === "Enter") {
         e.preventDefault();
         setUsingKeys(true);
@@ -295,6 +305,13 @@ export default function App() {
     itemRefs.current[cursor]?.scrollIntoView({ block: "nearest" });
   }, [cursor]);
 
+  // Keep cursor aligned with the activeId when it becomes visible
+  useEffect(() => {
+    if (!activeId) return;
+    const idx = indexById.get(activeId);
+    if (idx !== undefined) setCursor(idx);
+  }, [activeId, indexById]);
+
   /* Active always from full set (not only visible) */
   const active: WithFolder | null = useMemo(
     () =>
@@ -387,6 +404,7 @@ export default function App() {
     const isActive = i.id === activeId;
     const isKeyFocus = usingKeys && navIdx === cursor && !isActive;
     const isHover = hoverIdx === navIdx;
+    const blocked = !canUse(i);
     const bg = isActive
       ? UI.active
       : isKeyFocus
@@ -427,6 +445,7 @@ export default function App() {
           background: bg,
           border: `1px solid ${UI.stroke}`,
           boxShadow: shadow,
+          opacity: blocked ? 0.75 : 1,
           transition: "box-shadow 140ms, background 140ms, transform 140ms",
         }}
       >
@@ -462,13 +481,17 @@ export default function App() {
     const bg = isHover ? UI.hover : "transparent";
     const shadow = "inset 0 0 0 1px rgba(255,255,255,.06)";
     const count = (p.sets?.length ?? 0) + (p.ipls?.length ?? 0);
+    const disabled = !canUse(active);
 
     return (
       <div
         key={p.label}
         onMouseEnter={() => setPresetHoverIdx(idx)}
         onMouseLeave={() => setPresetHoverIdx(null)}
-        onClick={() => applyPresetAndRemember(active!, p.label)}
+        onClick={() => {
+          if (disabled) return;
+          applyPresetAndRemember(active!, p.label);
+        }}
         style={{
           display: "flex",
           alignItems: "center",
@@ -480,6 +503,7 @@ export default function App() {
           background: bg,
           border: `1px solid ${UI.stroke}`,
           boxShadow: shadow,
+          opacity: disabled ? 0.75 : 1,
           transition: "box-shadow 140ms, background 140ms, transform 140ms",
         }}
       >
@@ -502,15 +526,53 @@ export default function App() {
     );
   };
 
+  const ShortcutChip = (keyText: string, label: string) => (
+    <Group
+      gap={6}
+      wrap="nowrap"
+      style={{
+        padding: "2px 7px",
+        borderRadius: 999,
+        background: UI.keyFocus,
+        border: `1px solid ${UI.stroke}`,
+        boxShadow: "none",
+        whiteSpace: "nowrap",
+        alignItems: "center",
+      }}
+    >
+      <Kbd
+        size="xs"
+        style={{
+          background: "rgba(255,255,255,0.08)",
+          borderColor: UI.stroke,
+          color: "white",
+          padding: "0 5px",
+          height: 16,
+          lineHeight: "16px",
+          borderRadius: 6,
+          boxShadow: "none",
+          fontWeight: 800,
+          fontSize: 10,
+        }}
+      >
+        {keyText}
+      </Kbd>
+      <Text size="xs" c={UI.textDim} style={{ whiteSpace: "nowrap" }}>
+        {label}
+      </Text>
+    </Group>
+  );
+
   /* ------------------------------- UI ------------------------------- */
   return (
     <div
       style={{
         position: "fixed",
         top: 24,
+        bottom: 24,
         right: 24,
         width: 380,
-        maxHeight: "calc(100vh - 48px)", // cap, but allow shrink
+        // height is defined by top/bottom to add spacing
         zIndex: 9999,
         pointerEvents: "auto",
       }}
@@ -522,10 +584,11 @@ export default function App() {
         style={{
           // no fixed height; shrink-wrap until capped
           maxHeight: "inherit",
+          height: "100%",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
-          background: `${UI.panel}, ${UI.aurora}`,
+          background: `${UI.panel}`,
           backgroundImage: UI.aurora,
           border: `1px solid ${UI.stroke}`,
           boxShadow: UI.glow,
@@ -536,9 +599,11 @@ export default function App() {
           <Stack gap="xs" style={{ padding: 10 }}>
             {/* Header */}
             <Group justify="space-between" align="center">
-              <Text fw={800} size="sm" style={{ letterSpacing: 0.3 }}>
-                {snap?.title ?? "Interior Manager"}
-              </Text>
+              <Group gap={8} align="center">
+                <Text fw={800} size="sm" style={{ letterSpacing: 0.3 }}>
+                  {snap?.title ?? "Interior Manager"}
+                </Text>
+              </Group>
               <Group gap="xs">
                 <Tooltip label="Toggle focus (Left Alt)" zIndex={15000}>
                   <SegmentedControl
@@ -599,6 +664,23 @@ export default function App() {
               value={query}
               radius="xl"
               variant="filled"
+              rightSection={
+                query ? (
+                  <ActionIcon
+                    size="sm"
+                    variant="subtle"
+                    onClick={() => {
+                      setQuery("");
+                      setCursor(0);
+                      setUsingKeys(false);
+                      setTimeout(() => searchRef.current?.focus(), 0);
+                    }}
+                    aria-label="Clear search"
+                  >
+                    <IconX size={12} />
+                  </ActionIcon>
+                ) : undefined
+              }
               onChange={(e) => {
                 setQuery(e.currentTarget.value);
                 setCursor(0);
@@ -612,6 +694,51 @@ export default function App() {
                 },
               }}
             />
+            <Box
+              style={{
+                background: UI.panelElevated,
+                border: `1px solid ${UI.stroke}`,
+                borderRadius: UI.radiusMd,
+                padding: 8,
+                boxShadow: "inset 0 0 0 1px rgba(255,255,255,.06)",
+              }}
+            >
+              <Stack gap={6}>
+                <Text
+                  size="xs"
+                  fw={700}
+                  c={UI.textDim}
+                  style={{ letterSpacing: 0.3 }}
+                >
+                  Shortcuts
+                </Text>
+                <Box
+                  style={{
+                    background: UI.glass,
+                    border: `1px solid ${UI.stroke}`,
+                    borderRadius: UI.radiusMd,
+                    padding: 6,
+                    boxShadow: "inset 0 0 0 1px rgba(255,255,255,.06)",
+                    overflow: "hidden",
+                  }}
+                >
+                  <Box
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      gap: 6,
+                      flexWrap: "nowrap",
+                      width: "100%",
+                    }}
+                  >
+                    {ShortcutChip("↑/↓", "Navigate")}
+                    {ShortcutChip("L-Alt", "Focus")}
+                    {ShortcutChip("Esc", "Close")}
+                  </Box>
+                </Box>
+              </Stack>
+            </Box>
 
             {/* Picker */}
             <Card
@@ -713,7 +840,7 @@ export default function App() {
           </Stack>
         </div>
 
-        {/* Details scroller — gets a definite max height = cap - chrome */}
+        {/* Details scroller – cap at viewport minus spacing and chrome */}
         <ScrollArea.Autosize
           mah={`calc(100vh - 48px - ${chromeH}px)`}
           type="auto"
@@ -726,40 +853,78 @@ export default function App() {
               </Text>
             ) : (
               <Stack gap="xs">
-                <Group justify="space-between">
-                  <Button
-                    size="xs"
-                    radius="xl"
-                    variant="gradient"
-                    gradient={{ from: "blue.6", to: "cyan.5", deg: 135 }}
-                    leftSection={<IconPlayerPlay size={14} />}
-                    onClick={() => teleportTo(active)}
-                    disabled={!canUse(active)}
-                    styles={{
-                      root: {
-                        boxShadow: "inset 0 0 0 1px rgba(255,255,255,.06)",
-                      },
-                    }}
-                  >
-                    Teleport
-                  </Button>
-                  <Button
-                    size="xs"
-                    radius="xl"
-                    color="red"
-                    variant="light"
-                    leftSection={<IconX size={14} />}
-                    onClick={() => disableAll(active)}
-                    disabled={!canUse(active)}
-                    styles={{
-                      root: {
-                        boxShadow: "inset 0 0 0 1px rgba(255,255,255,.06)",
-                      },
-                    }}
-                  >
-                    Disable all
-                  </Button>
-                </Group>
+                <Card
+                  withBorder
+                  radius="lg"
+                  p="sm"
+                  style={{
+                    background: UI.panelElevated,
+                    border: `1px solid ${UI.stroke}`,
+                    boxShadow: "inset 0 0 0 1px rgba(255,255,255,.06)",
+                  }}
+                >
+                  <Stack gap="xs">
+                    <Group justify="space-between" align="center">
+                      <Text fw={700} size="sm">
+                        Controls
+                      </Text>
+                      {active.adminOnly && !snap?.allowed && (
+                        <Badge size="xs" variant="outline">
+                          Admin only
+                        </Badge>
+                      )}
+                    </Group>
+                    <Group gap="xs" grow>
+                      <Tooltip label="Teleport to this interior" zIndex={15000}>
+                        <Button
+                          size="xs"
+                          radius="xl"
+                          variant="gradient"
+                          gradient={{ from: "blue.6", to: "cyan.5", deg: 135 }}
+                          leftSection={<IconPlayerPlay size={14} />}
+                          onClick={() => teleportTo(active)}
+                          disabled={!canUse(active)}
+                          styles={{
+                            root: {
+                              boxShadow:
+                                "inset 0 0 0 1px rgba(255,255,255,.06)",
+                            },
+                          }}
+                        >
+                          Teleport
+                        </Button>
+                      </Tooltip>
+                      <Tooltip
+                        label="Turn off all sets and IPLs"
+                        zIndex={15000}
+                      >
+                        <Button
+                          size="xs"
+                          radius="xl"
+                          color="red"
+                          variant="light"
+                          leftSection={<IconX size={14} />}
+                          onClick={() => disableAll(active)}
+                          disabled={!canUse(active)}
+                          styles={{
+                            root: {
+                              boxShadow:
+                                "inset 0 0 0 1px rgba(255,255,255,.06)",
+                            },
+                          }}
+                        >
+                          Disable all
+                        </Button>
+                      </Tooltip>
+                    </Group>
+                    {!canUse(active) && (
+                      <Text size="xs" c="dimmed">
+                        You don't have permission to use controls for this
+                        interior.
+                      </Text>
+                    )}
+                  </Stack>
+                </Card>
 
                 <Card
                   withBorder
@@ -771,9 +936,18 @@ export default function App() {
                     boxShadow: "inset 0 0 0 1px rgba(255,255,255,.06)",
                   }}
                 >
-                  <Text fw={700} size="sm" mb={6}>
-                    Entity Sets
-                  </Text>
+                  <Group justify="space-between" align="center" mb={6}>
+                    <Text fw={700} size="sm">
+                      Entity Sets
+                    </Text>
+                    <Badge size="xs" variant="light">
+                      {active.entitySets?.filter(
+                        (s) => !s.hidden && !!active.state?.[s.set]
+                      ).length ?? 0}
+                      /{active.entitySets?.filter((s) => !s.hidden).length ?? 0}{" "}
+                      on
+                    </Badge>
+                  </Group>
                   <Stack gap={8}>
                     {active.entitySets
                       ?.filter((s) => !s.hidden)
@@ -787,6 +961,7 @@ export default function App() {
                             <Switch
                               size="xs"
                               checked={on}
+                              disabled={!canUse(active)}
                               onChange={(e) =>
                                 toggleSet(
                                   active,
@@ -818,9 +993,17 @@ export default function App() {
                     boxShadow: "inset 0 0 0 1px rgba(255,255,255,.06)",
                   }}
                 >
-                  <Text fw={700} size="sm" mb={6}>
-                    IPLs
-                  </Text>
+                  <Group justify="space-between" align="center" mb={6}>
+                    <Text fw={700} size="sm">
+                      IPLs
+                    </Text>
+                    <Badge size="xs" variant="light">
+                      {active.ipls?.filter(
+                        (i) => !i.hidden && !!active.state?.[i.name]
+                      ).length ?? 0}
+                      /{active.ipls?.filter((i) => !i.hidden).length ?? 0} on
+                    </Badge>
+                  </Group>
                   <Stack gap={8}>
                     {active.ipls
                       ?.filter((i) => !i.hidden)
@@ -834,6 +1017,7 @@ export default function App() {
                             <Switch
                               size="xs"
                               checked={on}
+                              disabled={!canUse(active)}
                               onChange={(e) =>
                                 toggleIpl(
                                   active,
