@@ -1,6 +1,6 @@
 # Changelog v1.4.1
 - Renamed all Prompts Sandy Shores houses to match the numbers displayed on each property.
-- Fixed an issue where two different houses were teleporting to the same location (House 1018). The duplicate now correctly points to House 1014.
+- Fixed an issue where two different houses were teleporting to the same location (House 1018). The duplicate now correctly points to House 1017.
 
 # Changelog v1.4.0
 - Added full support for the *Prompts: Sandy Shores Houses – Part 1* update.
