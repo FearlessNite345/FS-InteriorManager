@@ -16,310 +16,10 @@ Config.InteriorFolders = {
     {
         folder = "Prompt's Sandy Houses",
         interiors = {
-            {
-                id = "prompts_sandy_house1",
-                name = "House 1",
-                coords = vec3(1812.367, 3762.021, 34.21988),
-                adminOnly = false,
-                defaults = {
-                    sets = {
-                        "wallframe2",
-                        "windowframe1",
-                        "doorframe2",
-                        "bathroomlight",
-                        "halllight",
-                        "bedroomlight",
-                        "masterbedroomlight",
-                        "masterbathroomlight",
-                        "masterbathroom2",
-                        "bedroom3",
-                        "masterbedroom1",
-                        "bathroom2",
-                    }
-                },
-                entitySets = {
-                    { label = "Bathroom Light",       set = "bathroomlight" },
-                    { label = "Hall Light",           set = "halllight" },
-                    { label = "Bedroom Light",        set = "bedroomlight" },
-                    { label = "Master Bedroom Light", set = "masterbedroomlight" },
-                    { label = "Bathroom 1",           set = "bathroom1" },
-                    { label = "Bathroom 2",           set = "bathroom2" },
-                    { label = "Master Bathroom 1",    set = "masterbathroom1" },
-                    { label = "Master Bathroom 2",    set = "masterbathroom2" },
-                    { label = "Bedroom 1",            set = "bedroom1" },
-                    { label = "Bedroom 2",            set = "bedroom2" },
-                    { label = "Bedroom 3",            set = "bedroom3" },
-                    { label = "Master Bedroom 1",     set = "masterbedroom1" },
-                    { label = "Master Bedroom 2",     set = "masterbedroom2" },
-                    { label = "Master Bedroom 3",     set = "masterbedroom3" },
-                    { label = "Bath 1",               set = "bath1" },
-                    { label = "Bath 2",               set = "bath2" },
-                    { label = "Master Bath 1",        set = "masterbath1" },
-                    { label = "Master Bath 2",        set = "masterbath2" },
-                    { label = "Bedroom Dirt",         set = "bedroomdirt" },
-                    { label = "Hall Dirt",            set = "halldirt" },
-                    { label = "Master Bedroom Dirt",  set = "masterbedroomdirt" },
-                    { label = "Door Frame 1",         set = "doorframe1" },
-                    { label = "Door Frame 2",         set = "doorframe2" },
-                    { label = "Window Frame 1",       set = "windowframe1" },
-                    { label = "Window Frame 2",       set = "windowframe2" },
-                    { label = "Wall Frame 1",         set = "wallframe1" },
-                    { label = "Wall Frame 2",         set = "wallframe2" },
-                    { label = "Upper Frame",          set = "upframe" },
-                    { label = "Radiator Place",       set = "radiatorplace" },
-                    { label = "Fireplace",            set = "fireplace" },
-                },
-                presets = {
-                    {
-                        label = "Clean",
-                        sets = {
-                            "wallframe2",
-                            "windowframe1",
-                            "doorframe2",
-                            "bathroomlight",
-                            "halllight",
-                            "bedroomlight",
-                            "masterbedroomlight",
-                            "masterbathroomlight",
-                            "masterbathroom2",
-                            "bedroom3",
-                            "masterbedroom1",
-                            "bathroom2",
-                        },
-                        ipls = {}
-                    },
-                    {
-                        label = "Dirty",
-                        sets = {
-                            "wallframe2",
-                            "windowframe1",
-                            "doorframe2",
-                            "bathroomlight",
-                            "halllight",
-                            "bedroomlight",
-                            "masterbedroomlight",
-                            "masterbathroomlight",
-                            "masterbathroom2",
-                            "bedroom3",
-                            "masterbedroom1",
-                            "bathroom2",
-                            "bedroomdirt",
-                            "halldirt",
-                            "masterbedroomdirt",
-                        },
-                        ipls = {}
-                    },
-                    {
-                        label = "Lights Off",
-                        sets = {
-                            "wallframe2",
-                            "windowframe1",
-                            "doorframe2",
-                            "masterbathroom2",
-                            "bedroom3",
-                            "masterbedroom1",
-                            "bathroom2",
-                            "bedroomdirt",
-                            "halldirt",
-                            "masterbedroomdirt",
-                        },
-                        ipls = {}
-                    }
-                }
-            },
-            {
-                id = "prompts_sandy_house2",
-                name = "House 2",
-                coords = vec3(1775.337, 3746.64, 34.72295),
-                adminOnly = false,
-                defaults = {
-                    sets = {
-                        "wallframe1",
-                        "windowframe2",
-                        "doorframe2",
-                        "bathroomlight",
-                        "livingroomlight",
-                        "kitchenlight",
-                        "bedroomlight",
-                        "bedroom2",
-                        "bathroom2",
-                    }
-                },
-                entitySets = {
-                    { label = "Bathroom Light",    set = "bathroomlight" },
-                    { label = "Living Room Light", set = "livingroomlight" },
-                    { label = "Kitchen Light",     set = "kitchenlight" },
-                    { label = "Bedroom Light",     set = "bedroomlight" },
-                    { label = "Bathroom 1",        set = "bathroom1" },
-                    { label = "Bathroom 2",        set = "bathroom2" },
-                    { label = "Bathroom 3",        set = "bathroom3" },
-                    { label = "Bedroom 1",         set = "bedroom1" },
-                    { label = "Bedroom 2",         set = "bedroom2" },
-                    { label = "Bedroom 3",         set = "bedroom3" },
-                    { label = "Bedroom 4",         set = "bedroom4" },
-                    { label = "Bathroom Set 1",    set = "bath1" },
-                    { label = "Bathroom Set 2",    set = "bath2" },
-                    { label = "Bedroom Dirt",      set = "bedroomdirt" },
-                    { label = "Living Room Dirt",  set = "livingroomdirt" },
-                    { label = "Kitchen Dirt",      set = "kitchendirt" },
-                    { label = "Door Frame 1",      set = "doorframe1" },
-                    { label = "Door Frame 2",      set = "doorframe2" },
-                    { label = "Window Frame 1",    set = "windowframe1" },
-                    { label = "Window Frame 2",    set = "windowframe2" },
-                    { label = "Wall Frame 1",      set = "wallframe1" },
-                    { label = "Wall Frame 2",      set = "wallframe2" },
-                    { label = "Upper Frame",       set = "upframe" },
-                },
-                presets = {
-                    {
-                        label = "Clean",
-                        sets = {
-                            "wallframe1",
-                            "windowframe2",
-                            "doorframe2",
-                            "bathroomlight",
-                            "livingroomlight",
-                            "kitchenlight",
-                            "bedroomlight",
-                            "bedroom2",
-                            "bathroom2",
-                        },
-                        ipls = {}
-                    },
-                    {
-                        label = "Dirty",
-                        sets = {
-                            "wallframe1",
-                            "windowframe2",
-                            "doorframe2",
-                            "bathroomlight",
-                            "livingroomlight",
-                            "kitchenlight",
-                            "bedroomlight",
-                            "bedroom2",
-                            "bathroom2",
-                            "bedroomdirt",
-                            "livingroomdirt",
-                            "kitchendirt",
-                        },
-                        ipls = {}
-                    },
-                    {
-                        label = "Lights Off",
-                        sets = {
-                            "wallframe1",
-                            "windowframe2",
-                            "doorframe2",
-                            "bathroom2",
-                            "bedroom2",
-                            "bedroomdirt",
-                            "livingroomdirt",
-                            "kitchendirt",
-                        },
-                        ipls = {}
-                    }
-                }
-            },
-            {
-                id = "prompts_sandy_house3",
-                name = "House 3",
-                coords = vec3(1353.875, 3598.896, 35.84079),
-                adminOnly = false,
-                defaults = {
-                    sets = {
-                        "wallframe1",
-                        "windowframe1",
-                        "doorframe2",
-                        "bathroomlight",
-                        "livingroomlight",
-                        "kitchenlight",
-                        "bedroomlight",
-                        "bathroom2",
-                        "bedroom2",
-                        "bath1",
-                    }
-                },
-                entitySets = {
-                    { label = "Bathroom Light",    set = "bathroomlight" },
-                    { label = "Living Room Light", set = "livingroomlight" },
-                    { label = "Kitchen Light",     set = "kitchenlight" },
-                    { label = "Bedroom Light",     set = "bedroomlight" },
-                    { label = "Bathroom 1",        set = "bathroom1" },
-                    { label = "Bathroom 2",        set = "bathroom2" },
-                    { label = "Bathroom 3",        set = "bathroom3" },
-                    { label = "Bedroom 1",         set = "bedroom1" },
-                    { label = "Bedroom 2",         set = "bedroom2" },
-                    { label = "Bedroom 3",         set = "bedroom3" },
-                    { label = "Bedroom 4",         set = "bedroom4" },
-                    { label = "Bathroom Set 1",    set = "bath1" },
-                    { label = "Bathroom Set 2",    set = "bath2" },
-                    { label = "Bedroom Dirt",      set = "bedroomdirt" },
-                    { label = "Living Room Dirt",  set = "livingroomdirt" },
-                    { label = "Kitchen Dirt",      set = "kitchendirt" },
-                    { label = "Door Frame 1",      set = "doorframe1" },
-                    { label = "Door Frame 2",      set = "doorframe2" },
-                    { label = "Window Frame 1",    set = "windowframe1" },
-                    { label = "Window Frame 2",    set = "windowframe2" },
-                    { label = "Wall Frame 1",      set = "wallframe1" },
-                    { label = "Wall Frame 2",      set = "wallframe2" },
-                    { label = "Upper Frame",       set = "upframe" },
-                },
-                presets = {
-                    {
-                        label = "Clean",
-                        sets = {
-                            "wallframe1",
-                            "windowframe1",
-                            "doorframe2",
-                            "bathroomlight",
-                            "livingroomlight",
-                            "kitchenlight",
-                            "bedroomlight",
-                            "bathroom2",
-                            "bedroom2",
-                            "bath1",
-                        },
-                        ipls = {}
-                    },
-                    {
-                        label = "Dirty",
-                        sets = {
-                            "wallframe1",
-                            "windowframe1",
-                            "doorframe2",
-                            "bathroomlight",
-                            "livingroomlight",
-                            "kitchenlight",
-                            "bedroomlight",
-                            "bathroom2",
-                            "bedroom2",
-                            "bath1",
-                            "bedroomdirt",
-                            "livingroomdirt",
-                            "kitchendirt",
-                        },
-                        ipls = {}
-                    },
-                    {
-                        label = "Lights Off",
-                        sets = {
-                            "wallframe1",
-                            "windowframe1",
-                            "doorframe2",
-                            "bathroom2",
-                            "bedroom2",
-                            "bath1",
-                            "bedroomdirt",
-                            "livingroomdirt",
-                            "kitchendirt",
-                        },
-                        ipls = {}
-                    }
-                }
-            },
+            -- 1001
             {
                 id = "prompts_sandy_house4",
-                name = "House 4",
+                name = "House 1001",
                 coords = vec3(1650.912, 3626.822, 36.44559),
                 adminOnly = false,
                 defaults = {
@@ -414,139 +114,17 @@ Config.InteriorFolders = {
                     }
                 }
             },
+
+            -- 1002
             {
-                id = "prompts_sandy_house5",
-                name = "House 5",
-                coords = vec3(1425.434, 3669.213, 35.62526),
+                id = "prompts_sandy_house10",
+                name = "House 1002",
+                coords = vec3(1677.48, 3653.435, 37.39836),
                 adminOnly = false,
                 defaults = {
                     sets = {
                         "wallframe1",
-                        "windowframe2",
-                        "doorframe2",
-                        "livingroomlight",
-                        "kitchenlight",
-                        "halllight",
-                        "bathroomlight",
-                        "masterbathroomlight",
-                        "masterbedroomlight",
-                        "bedroomlight",
-                        "bathroom2",
-                        "bedroom2",
-                        "masterbathroom1",
-                        "bath1",
-                    }
-                },
-                entitySets = {
-                    { label = "Living Room Light",     set = "livingroomlight" },
-                    { label = "Kitchen Light",         set = "kitchenlight" },
-                    { label = "Hall Light",            set = "halllight" },
-                    { label = "Bathroom Light",        set = "bathroomlight" },
-                    { label = "Master Bathroom Light", set = "masterbathroomlight" },
-                    { label = "Master Bedroom Light",  set = "masterbedroomlight" },
-                    { label = "Bedroom Light",         set = "bedroomlight" },
-                    { label = "Master Bathroom 1",     set = "masterbathroom1" },
-                    { label = "Master Bathroom 2",     set = "masterbathroom2" },
-                    { label = "Bathroom 1",            set = "bathroom1" },
-                    { label = "Bathroom 2",            set = "bathroom2" },
-                    { label = "Master Bedroom 1",      set = "masterbedroom1" },
-                    { label = "Master Bedroom 2",      set = "masterbedroom2" },
-                    { label = "Master Bedroom 3",      set = "masterbedroom3" },
-                    { label = "Bedroom 1",             set = "bedroom1" },
-                    { label = "Bedroom 2",             set = "bedroom2" },
-                    { label = "Bedroom 3",             set = "bedroom3" },
-                    { label = "Bathroom Set 1",        set = "bath1" },
-                    { label = "Bathroom Set 2",        set = "bath2" },
-                    { label = "Master Bathroom Set 1", set = "masterbath1" },
-                    { label = "Master Bathroom Set 2", set = "masterbath2" },
-                    { label = "Living Room Dirt",      set = "livingroomdirt" },
-                    { label = "Kitchen Dirt",          set = "kitchendirt" },
-                    { label = "Hall Dirt",             set = "halldirt" },
-                    { label = "Bedroom Dirt",          set = "bedroomdirt" },
-                    { label = "Master Bedroom Dirt",   set = "masterbedroomdirt" },
-                    { label = "Door Frame 1",          set = "doorframe1" },
-                    { label = "Door Frame 2",          set = "doorframe2" },
-                    { label = "Wall Frame 1",          set = "wallframe1" },
-                    { label = "Wall Frame 2",          set = "wallframe2" },
-                    { label = "Window Frame 1",        set = "windowframe1" },
-                    { label = "Window Frame 2",        set = "windowframe2" },
-                    { label = "Upper Frame",           set = "upframe" },
-                },
-                presets = {
-                    {
-                        label = "Clean",
-                        sets = {
-                            "wallframe1",
-                            "windowframe2",
-                            "doorframe2",
-                            "livingroomlight",
-                            "kitchenlight",
-                            "halllight",
-                            "bathroomlight",
-                            "masterbathroomlight",
-                            "masterbedroomlight",
-                            "bedroomlight",
-                            "bathroom2",
-                            "bedroom2",
-                            "masterbathroom1",
-                            "bath1",
-                        },
-                        ipls = {}
-                    },
-                    {
-                        label = "Dirty",
-                        sets = {
-                            "wallframe1",
-                            "windowframe2",
-                            "doorframe2",
-                            "livingroomlight",
-                            "kitchenlight",
-                            "halllight",
-                            "bathroomlight",
-                            "masterbathroomlight",
-                            "masterbedroomlight",
-                            "bedroomlight",
-                            "bathroom2",
-                            "bedroom2",
-                            "masterbedroomdirt",
-                            "masterbathroom1",
-                            "bath1",
-                            "livingroomdirt",
-                            "kitchendirt",
-                            "halldirt",
-                            "bedroomdirt",
-                        },
-                        ipls = {}
-                    },
-                    {
-                        label = "Lights Off",
-                        sets = {
-                            "wallframe1",
-                            "windowframe2",
-                            "doorframe2",
-                            "bathroom2",
-                            "bedroom2",
-                            "masterbedroomdirt",
-                            "masterbathroom1",
-                            "bath1",
-                            "livingroomdirt",
-                            "kitchendirt",
-                            "halldirt",
-                            "bedroomdirt",
-                        },
-                        ipls = {}
-                    }
-                }
-            },
-            {
-                id = "prompts_sandy_house6",
-                name = "House 6",
-                coords = vec3(1794.129, 3717.376, 35.1188),
-                adminOnly = false,
-                defaults = {
-                    sets = {
-                        "wallframe1",
-                        "windowframe2",
+                        "windowframe1",
                         "doorframe2",
                         "bathroomlight",
                         "livingroomlight",
@@ -554,7 +132,8 @@ Config.InteriorFolders = {
                         "bedroomlight",
                         "halllight",
                         "bathroom1",
-                        "bedroom2",
+                        "bath2",
+                        "bedroom1",
                     }
                 },
                 entitySets = {
@@ -565,7 +144,6 @@ Config.InteriorFolders = {
                     { label = "Hall Light",        set = "halllight" },
                     { label = "Bathroom 1",        set = "bathroom1" },
                     { label = "Bathroom 2",        set = "bathroom2" },
-                    { label = "Bathroom 3",        set = "bathroom3" },
                     { label = "Bedroom 1",         set = "bedroom1" },
                     { label = "Bedroom 2",         set = "bedroom2" },
                     { label = "Bedroom 3",         set = "bedroom3" },
@@ -581,14 +159,13 @@ Config.InteriorFolders = {
                     { label = "Window Frame 2",    set = "windowframe2" },
                     { label = "Wall Frame 1",      set = "wallframe1" },
                     { label = "Wall Frame 2",      set = "wallframe2" },
-                    { label = "Upper Frame",       set = "upframe" },
                 },
                 presets = {
                     {
                         label = "Clean",
                         sets = {
                             "wallframe1",
-                            "windowframe2",
+                            "windowframe1",
                             "doorframe2",
                             "bathroomlight",
                             "livingroomlight",
@@ -596,7 +173,8 @@ Config.InteriorFolders = {
                             "bedroomlight",
                             "halllight",
                             "bathroom1",
-                            "bedroom2",
+                            "bath2",
+                            "bedroom1",
                         },
                         ipls = {}
                     },
@@ -604,7 +182,7 @@ Config.InteriorFolders = {
                         label = "Dirty",
                         sets = {
                             "wallframe1",
-                            "windowframe2",
+                            "windowframe1",
                             "doorframe2",
                             "bathroomlight",
                             "livingroomlight",
@@ -612,11 +190,12 @@ Config.InteriorFolders = {
                             "bedroomlight",
                             "halllight",
                             "bathroom1",
-                            "bedroom2",
                             "bedroomdirt",
+                            "bath2",
                             "livingroomdirt",
                             "kitchendirt",
                             "halldirt",
+                            "bedroom1",
                         },
                         ipls = {}
                     },
@@ -624,22 +203,41 @@ Config.InteriorFolders = {
                         label = "Lights Off",
                         sets = {
                             "wallframe1",
-                            "windowframe2",
+                            "windowframe1",
                             "doorframe2",
-                            "bathroom3",
-                            "bedroom2",
+                            "bathroom1",
                             "bedroomdirt",
+                            "bath2",
                             "livingroomdirt",
                             "kitchendirt",
                             "halldirt",
+                            "bedroom1",
                         },
                         ipls = {}
                     }
                 }
             },
+
+            -- 1003
+            {
+                id = "va_house11_interior",
+                name = "House 1003",
+                coords = vec3(1667.42, 3677.586, 35.58788),
+                adminOnly = false,
+                defaults = {
+                    sets = { "default" }
+                },
+                entitySets = {
+                    { label = "Default",   set = "default" },
+                    { label = "Furniture", set = "furniture" },
+                    { label = "Abandoned", set = "abandoned" }
+                }
+            },
+
+            -- 1004
             {
                 id = "prompts_sandy_house7",
-                name = "House 7",
+                name = "House 1004",
                 coords = vec3(1644.035, 3660.563, 35.57352),
                 adminOnly = false,
                 defaults = {
@@ -778,9 +376,770 @@ Config.InteriorFolders = {
                     }
                 }
             },
+
+            -- 1005
+            {
+                id = "prompts_sandy_house2",
+                name = "House 1005",
+                coords = vec3(1775.337, 3746.64, 34.72295),
+                adminOnly = false,
+                defaults = {
+                    sets = {
+                        "wallframe1",
+                        "windowframe2",
+                        "doorframe2",
+                        "bathroomlight",
+                        "livingroomlight",
+                        "kitchenlight",
+                        "bedroomlight",
+                        "bedroom2",
+                        "bathroom2",
+                    }
+                },
+                entitySets = {
+                    { label = "Bathroom Light",    set = "bathroomlight" },
+                    { label = "Living Room Light", set = "livingroomlight" },
+                    { label = "Kitchen Light",     set = "kitchenlight" },
+                    { label = "Bedroom Light",     set = "bedroomlight" },
+                    { label = "Bathroom 1",        set = "bathroom1" },
+                    { label = "Bathroom 2",        set = "bathroom2" },
+                    { label = "Bathroom 3",        set = "bathroom3" },
+                    { label = "Bedroom 1",         set = "bedroom1" },
+                    { label = "Bedroom 2",         set = "bedroom2" },
+                    { label = "Bedroom 3",         set = "bedroom3" },
+                    { label = "Bedroom 4",         set = "bedroom4" },
+                    { label = "Bathroom Set 1",    set = "bath1" },
+                    { label = "Bathroom Set 2",    set = "bath2" },
+                    { label = "Bedroom Dirt",      set = "bedroomdirt" },
+                    { label = "Living Room Dirt",  set = "livingroomdirt" },
+                    { label = "Kitchen Dirt",      set = "kitchendirt" },
+                    { label = "Door Frame 1",      set = "doorframe1" },
+                    { label = "Door Frame 2",      set = "doorframe2" },
+                    { label = "Window Frame 1",    set = "windowframe1" },
+                    { label = "Window Frame 2",    set = "windowframe2" },
+                    { label = "Wall Frame 1",      set = "wallframe1" },
+                    { label = "Wall Frame 2",      set = "wallframe2" },
+                    { label = "Upper Frame",       set = "upframe" },
+                },
+                presets = {
+                    {
+                        label = "Clean",
+                        sets = {
+                            "wallframe1",
+                            "windowframe2",
+                            "doorframe2",
+                            "bathroomlight",
+                            "livingroomlight",
+                            "kitchenlight",
+                            "bedroomlight",
+                            "bedroom2",
+                            "bathroom2",
+                        },
+                        ipls = {}
+                    },
+                    {
+                        label = "Dirty",
+                        sets = {
+                            "wallframe1",
+                            "windowframe2",
+                            "doorframe2",
+                            "bathroomlight",
+                            "livingroomlight",
+                            "kitchenlight",
+                            "bedroomlight",
+                            "bedroom2",
+                            "bathroom2",
+                            "bedroomdirt",
+                            "livingroomdirt",
+                            "kitchendirt",
+                        },
+                        ipls = {}
+                    },
+                    {
+                        label = "Lights Off",
+                        sets = {
+                            "wallframe1",
+                            "windowframe2",
+                            "doorframe2",
+                            "bathroom2",
+                            "bedroom2",
+                            "bedroomdirt",
+                            "livingroomdirt",
+                            "kitchendirt",
+                        },
+                        ipls = {}
+                    }
+                }
+            },
+
+            -- 1006
+            {
+                id = "prompts_sandy_house6",
+                name = "House 1006",
+                coords = vec3(1794.129, 3717.376, 35.1188),
+                adminOnly = false,
+                defaults = {
+                    sets = {
+                        "wallframe1",
+                        "windowframe2",
+                        "doorframe2",
+                        "bathroomlight",
+                        "livingroomlight",
+                        "kitchenlight",
+                        "bedroomlight",
+                        "halllight",
+                        "bathroom1",
+                        "bedroom2",
+                    }
+                },
+                entitySets = {
+                    { label = "Bathroom Light",    set = "bathroomlight" },
+                    { label = "Living Room Light", set = "livingroomlight" },
+                    { label = "Kitchen Light",     set = "kitchenlight" },
+                    { label = "Bedroom Light",     set = "bedroomlight" },
+                    { label = "Hall Light",        set = "halllight" },
+                    { label = "Bathroom 1",        set = "bathroom1" },
+                    { label = "Bathroom 2",        set = "bathroom2" },
+                    { label = "Bathroom 3",        set = "bathroom3" },
+                    { label = "Bedroom 1",         set = "bedroom1" },
+                    { label = "Bedroom 2",         set = "bedroom2" },
+                    { label = "Bedroom 3",         set = "bedroom3" },
+                    { label = "Bathroom Set 1",    set = "bath1" },
+                    { label = "Bathroom Set 2",    set = "bath2" },
+                    { label = "Bedroom Dirt",      set = "bedroomdirt" },
+                    { label = "Living Room Dirt",  set = "livingroomdirt" },
+                    { label = "Kitchen Dirt",      set = "kitchendirt" },
+                    { label = "Hall Dirt",         set = "halldirt" },
+                    { label = "Door Frame 1",      set = "doorframe1" },
+                    { label = "Door Frame 2",      set = "doorframe2" },
+                    { label = "Window Frame 1",    set = "windowframe1" },
+                    { label = "Window Frame 2",    set = "windowframe2" },
+                    { label = "Wall Frame 1",      set = "wallframe1" },
+                    { label = "Wall Frame 2",      set = "wallframe2" },
+                    { label = "Upper Frame",       set = "upframe" },
+                },
+                presets = {
+                    {
+                        label = "Clean",
+                        sets = {
+                            "wallframe1",
+                            "windowframe2",
+                            "doorframe2",
+                            "bathroomlight",
+                            "livingroomlight",
+                            "kitchenlight",
+                            "bedroomlight",
+                            "halllight",
+                            "bathroom1",
+                            "bedroom2",
+                        },
+                        ipls = {}
+                    },
+                    {
+                        label = "Dirty",
+                        sets = {
+                            "wallframe1",
+                            "windowframe2",
+                            "doorframe2",
+                            "bathroomlight",
+                            "livingroomlight",
+                            "kitchenlight",
+                            "bedroomlight",
+                            "halllight",
+                            "bathroom1",
+                            "bedroom2",
+                            "bedroomdirt",
+                            "livingroomdirt",
+                            "kitchendirt",
+                            "halldirt",
+                        },
+                        ipls = {}
+                    },
+                    {
+                        label = "Lights Off",
+                        sets = {
+                            "wallframe1",
+                            "windowframe2",
+                            "doorframe2",
+                            "bathroom3",
+                            "bedroom2",
+                            "bedroomdirt",
+                            "livingroomdirt",
+                            "kitchendirt",
+                            "halldirt",
+                        },
+                        ipls = {}
+                    }
+                }
+            },
+
+            -- 1007
+            {
+                id = "prompts_sandy_house9",
+                name = "House 1007",
+                coords = vec3(1825.7614, 3741.9109, 34.6686),
+                adminOnly = false,
+                defaults = {
+                    sets = {
+                        "wallframe2",
+                        "windowframe2",
+                        "doorframe1",
+                        "bathroomlight",
+                        "livingroomlight",
+                        "kitchenlight",
+                        "bedroomlight",
+                        "halllight",
+                        "bathroom2",
+                        "bedroom3",
+                        "bath1",
+                    }
+                },
+                entitySets = {
+                    { label = "Bathroom Light",    set = "bathroomlight" },
+                    { label = "Living Room Light", set = "livingroomlight" },
+                    { label = "Kitchen Light",     set = "kitchenlight" },
+                    { label = "Bedroom Light",     set = "bedroomlight" },
+                    { label = "Hall Light",        set = "halllight" },
+                    { label = "Bathroom 1",        set = "bathroom1" },
+                    { label = "Bathroom 2",        set = "bathroom2" },
+                    { label = "Bedroom 1",         set = "bedroom1" },
+                    { label = "Bedroom 2",         set = "bedroom2" },
+                    { label = "Bedroom 3",         set = "bedroom3" },
+                    { label = "Bathroom Set 1",    set = "bath1" },
+                    { label = "Bathroom Set 2",    set = "bath2" },
+                    { label = "Bedroom Dirt",      set = "bedroomdirt" },
+                    { label = "Living Room Dirt",  set = "livingroomdirt" },
+                    { label = "Kitchen Dirt",      set = "kitchendirt" },
+                    { label = "Hall Dirt",         set = "halldirt" },
+                    { label = "Door Frame 1",      set = "doorframe1" },
+                    { label = "Door Frame 2",      set = "doorframe2" },
+                    { label = "Window Frame 1",    set = "windowframe1" },
+                    { label = "Window Frame 2",    set = "windowframe2" },
+                    { label = "Wall Frame 1",      set = "wallframe1" },
+                    { label = "Wall Frame 2",      set = "wallframe2" },
+                },
+                presets = {
+                    {
+                        label = "Clean",
+                        sets = {
+                            "wallframe2",
+                            "windowframe2",
+                            "doorframe1",
+                            "bathroomlight",
+                            "livingroomlight",
+                            "kitchenlight",
+                            "bedroomlight",
+                            "halllight",
+                            "bathroom2",
+                            "bedroom3",
+                            "bath1",
+                        },
+                        ipls = {}
+                    },
+                    {
+                        label = "Dirty",
+                        sets = {
+                            "wallframe2",
+                            "windowframe2",
+                            "doorframe1",
+                            "bathroomlight",
+                            "livingroomlight",
+                            "kitchenlight",
+                            "bedroomlight",
+                            "halllight",
+                            "bathroom2",
+                            "bedroom3",
+                            "bath1",
+                            "bedroomdirt",
+                            "livingroomdirt",
+                            "kitchendirt",
+                            "halldirt",
+                        },
+                        ipls = {}
+                    },
+                    {
+                        label = "Lights Off",
+                        sets = {
+                            "wallframe2",
+                            "windowframe2",
+                            "doorframe1",
+                            "bathroom2",
+                            "bedroom3",
+                            "bath1",
+                            "bedroomdirt",
+                            "livingroomdirt",
+                            "kitchendirt",
+                            "halldirt",
+                        },
+                        ipls = {}
+                    }
+                }
+            },
+
+            -- 1008
+            {
+                id = "prompts_sandy_house1",
+                name = "House 1008",
+                coords = vec3(1812.367, 3762.021, 34.21988),
+                adminOnly = false,
+                defaults = {
+                    sets = {
+                        "wallframe2",
+                        "windowframe1",
+                        "doorframe2",
+                        "bathroomlight",
+                        "halllight",
+                        "bedroomlight",
+                        "masterbedroomlight",
+                        "masterbathroomlight",
+                        "masterbathroom2",
+                        "bedroom3",
+                        "masterbedroom1",
+                        "bathroom2",
+                    }
+                },
+                entitySets = {
+                    { label = "Bathroom Light",       set = "bathroomlight" },
+                    { label = "Hall Light",           set = "halllight" },
+                    { label = "Bedroom Light",        set = "bedroomlight" },
+                    { label = "Master Bedroom Light", set = "masterbedroomlight" },
+                    { label = "Bathroom 1",           set = "bathroom1" },
+                    { label = "Bathroom 2",           set = "bathroom2" },
+                    { label = "Master Bathroom 1",    set = "masterbathroom1" },
+                    { label = "Master Bathroom 2",    set = "masterbathroom2" },
+                    { label = "Bedroom 1",            set = "bedroom1" },
+                    { label = "Bedroom 2",            set = "bedroom2" },
+                    { label = "Bedroom 3",            set = "bedroom3" },
+                    { label = "Master Bedroom 1",     set = "masterbedroom1" },
+                    { label = "Master Bedroom 2",     set = "masterbedroom2" },
+                    { label = "Master Bedroom 3",     set = "masterbedroom3" },
+                    { label = "Bath 1",               set = "bath1" },
+                    { label = "Bath 2",               set = "bath2" },
+                    { label = "Master Bath 1",        set = "masterbath1" },
+                    { label = "Master Bath 2",        set = "masterbath2" },
+                    { label = "Bedroom Dirt",         set = "bedroomdirt" },
+                    { label = "Hall Dirt",            set = "halldirt" },
+                    { label = "Master Bedroom Dirt",  set = "masterbedroomdirt" },
+                    { label = "Door Frame 1",         set = "doorframe1" },
+                    { label = "Door Frame 2",         set = "doorframe2" },
+                    { label = "Window Frame 1",       set = "windowframe1" },
+                    { label = "Window Frame 2",       set = "windowframe2" },
+                    { label = "Wall Frame 1",         set = "wallframe1" },
+                    { label = "Wall Frame 2",         set = "wallframe2" },
+                    { label = "Upper Frame",          set = "upframe" },
+                    { label = "Radiator Place",       set = "radiatorplace" },
+                    { label = "Fireplace",            set = "fireplace" },
+                },
+                presets = {
+                    {
+                        label = "Clean",
+                        sets = {
+                            "wallframe2",
+                            "windowframe1",
+                            "doorframe2",
+                            "bathroomlight",
+                            "halllight",
+                            "bedroomlight",
+                            "masterbedroomlight",
+                            "masterbathroomlight",
+                            "masterbathroom2",
+                            "bedroom3",
+                            "masterbedroom1",
+                            "bathroom2",
+                        },
+                        ipls = {}
+                    },
+                    {
+                        label = "Dirty",
+                        sets = {
+                            "wallframe2",
+                            "windowframe1",
+                            "doorframe2",
+                            "bathroomlight",
+                            "halllight",
+                            "bedroomlight",
+                            "masterbedroomlight",
+                            "masterbathroomlight",
+                            "masterbathroom2",
+                            "bedroom3",
+                            "masterbedroom1",
+                            "bathroom2",
+                            "bedroomdirt",
+                            "halldirt",
+                            "masterbedroomdirt",
+                        },
+                        ipls = {}
+                    },
+                    {
+                        label = "Lights Off",
+                        sets = {
+                            "wallframe2",
+                            "windowframe1",
+                            "doorframe2",
+                            "masterbathroom2",
+                            "bedroom3",
+                            "masterbedroom1",
+                            "bathroom2",
+                            "bedroomdirt",
+                            "halldirt",
+                            "masterbedroomdirt",
+                        },
+                        ipls = {}
+                    }
+                }
+            },
+
+            -- 1009
+            {
+                id = "rck_senora_apps",
+                name = "House 1009",
+                coords = vec3(1735.229, 3877.322, 37.781),
+                adminOnly = false,
+                defaults = {
+                    sets = {
+                        "default"
+                    }
+                },
+                entitySets = {
+                    { label = "Default",       set = "default" },
+                    { label = "Furniture",     set = "furniture" },
+                    { label = "Hash 47D6D9CB", set = "hash_47D6D9CB" }
+                },
+                presets = {
+                    {
+                        label = "Clean",
+                        sets = {
+                            "default"
+                        },
+                        ipls = {}
+                    },
+                    {
+                        label = "Furnished",
+                        sets = {
+                            "default",
+                            "furniture"
+                        },
+                        ipls = {}
+                    }
+                }
+            },
+
+            -- 1010
+            {
+                id = "rck_senora_apps_b",
+                name = "House 1010",
+                coords = vec3(1705.158, 3853.854, 37.889),
+                adminOnly = false,
+                defaults = {
+                    sets = {
+                        "default"
+                    }
+                },
+                entitySets = {
+                    { label = "Default",       set = "default" },
+                    { label = "Furniture",     set = "furniture" },
+                    { label = "Hash 47D6D9CB", set = "hash_47D6D9CB" }
+                },
+                presets = {
+                    {
+                        label = "Clean",
+                        sets = {
+                            "default"
+                        },
+                        ipls = {}
+                    },
+                    {
+                        label = "Furnished",
+                        sets = {
+                            "default",
+                            "furniture"
+                        },
+                        ipls = {}
+                    }
+                }
+            },
+
+            -- 1011
+            {
+                id = "prompts_sandy_house5",
+                name = "House 1011",
+                coords = vec3(1419.5555, 3675.0859, 35.1359),
+                adminOnly = false,
+                defaults = {
+                    sets = {
+                        "wallframe1",
+                        "windowframe2",
+                        "doorframe2",
+                        "livingroomlight",
+                        "kitchenlight",
+                        "halllight",
+                        "bathroomlight",
+                        "masterbathroomlight",
+                        "masterbedroomlight",
+                        "bedroomlight",
+                        "bathroom2",
+                        "bedroom2",
+                        "masterbathroom1",
+                        "bath1",
+                        "masterbedroom1",
+                    }
+                },
+                entitySets = {
+                    { label = "Living Room Light",     set = "livingroomlight" },
+                    { label = "Kitchen Light",         set = "kitchenlight" },
+                    { label = "Hall Light",            set = "halllight" },
+                    { label = "Bathroom Light",        set = "bathroomlight" },
+                    { label = "Master Bathroom Light", set = "masterbathroomlight" },
+                    { label = "Master Bedroom Light",  set = "masterbedroomlight" },
+                    { label = "Bedroom Light",         set = "bedroomlight" },
+                    { label = "Master Bathroom 1",     set = "masterbathroom1" },
+                    { label = "Master Bathroom 2",     set = "masterbathroom2" },
+                    { label = "Bathroom 1",            set = "bathroom1" },
+                    { label = "Bathroom 2",            set = "bathroom2" },
+                    { label = "Master Bedroom 1",      set = "masterbedroom1" },
+                    { label = "Master Bedroom 2",      set = "masterbedroom2" },
+                    { label = "Master Bedroom 3",      set = "masterbedroom3" },
+                    { label = "Bedroom 1",             set = "bedroom1" },
+                    { label = "Bedroom 2",             set = "bedroom2" },
+                    { label = "Bedroom 3",             set = "bedroom3" },
+                    { label = "Bathroom Set 1",        set = "bath1" },
+                    { label = "Bathroom Set 2",        set = "bath2" },
+                    { label = "Master Bathroom Set 1", set = "masterbath1" },
+                    { label = "Master Bathroom Set 2", set = "masterbath2" },
+                    { label = "Living Room Dirt",      set = "livingroomdirt" },
+                    { label = "Kitchen Dirt",          set = "kitchendirt" },
+                    { label = "Hall Dirt",             set = "halldirt" },
+                    { label = "Bedroom Dirt",          set = "bedroomdirt" },
+                    { label = "Master Bedroom Dirt",   set = "masterbedroomdirt" },
+                    { label = "Door Frame 1",          set = "doorframe1" },
+                    { label = "Door Frame 2",          set = "doorframe2" },
+                    { label = "Wall Frame 1",          set = "wallframe1" },
+                    { label = "Wall Frame 2",          set = "wallframe2" },
+                    { label = "Window Frame 1",        set = "windowframe1" },
+                    { label = "Window Frame 2",        set = "windowframe2" },
+                    { label = "Upper Frame",           set = "upframe" },
+                },
+                presets = {
+                    {
+                        label = "Clean",
+                        sets = {
+                            "wallframe1",
+                            "windowframe2",
+                            "doorframe2",
+                            "livingroomlight",
+                            "kitchenlight",
+                            "halllight",
+                            "bathroomlight",
+                            "masterbathroomlight",
+                            "masterbedroomlight",
+                            "bedroomlight",
+                            "bathroom2",
+                            "bedroom2",
+                            "masterbathroom1",
+                            "bath1",
+                            "masterbedroom1",
+                        },
+                        ipls = {}
+                    },
+                    {
+                        label = "Dirty",
+                        sets = {
+                            "wallframe1",
+                            "windowframe2",
+                            "doorframe2",
+                            "livingroomlight",
+                            "kitchenlight",
+                            "halllight",
+                            "bathroomlight",
+                            "masterbathroomlight",
+                            "masterbedroomlight",
+                            "bedroomlight",
+                            "bathroom2",
+                            "bedroom2",
+                            "masterbedroomdirt",
+                            "masterbathroom1",
+                            "bath1",
+                            "livingroomdirt",
+                            "kitchendirt",
+                            "halldirt",
+                            "bedroomdirt",
+                            "masterbedroom1",
+                        },
+                        ipls = {}
+                    },
+                    {
+                        label = "Lights Off",
+                        sets = {
+                            "wallframe1",
+                            "windowframe2",
+                            "doorframe2",
+                            "bathroom2",
+                            "bedroom2",
+                            "masterbedroomdirt",
+                            "masterbathroom1",
+                            "bath1",
+                            "livingroomdirt",
+                            "kitchendirt",
+                            "halldirt",
+                            "bedroomdirt",
+                            "masterbedroom1",
+                        },
+                        ipls = {}
+                    }
+                }
+            },
+
+            -- 1012
+            {
+                id = "va_h16_interior",
+                name = "House 1012",
+                coords = vec3(1394.258, 3655.665, 35.85954),
+                adminOnly = false,
+                defaults = {
+                    sets = { "default" }
+                },
+                entitySets = {
+                    { label = "Default",   set = "default" },
+                    { label = "Furniture", set = "furniture" },
+                    { label = "Abandoned", set = "abandoned" }
+                }
+            },
+
+            -- 1013
+            {
+                id = "va_h15_interior",
+                name = "House 1013",
+                coords = vec3(1366.957, 3645.899, 34.68516),
+                adminOnly = false,
+                defaults = {
+                    sets = { "default" }
+                },
+                entitySets = {
+                    { label = "Default",   set = "default" },
+                    { label = "Furniture", set = "furniture" },
+                    { label = "Abandoned", set = "abandoned" }
+                }
+            },
+
+            -- 1014
+            {
+                id = "va_house14_interior",
+                name = "House 1014",
+                coords = vec3(1335.6047, 3641.3682, 33.8799),
+                adminOnly = false,
+                defaults = {
+                    sets = { "default" }
+                },
+                entitySets = {
+                    { label = "Default",   set = "default" },
+                    { label = "Furniture", set = "furniture" },
+                    { label = "Abandoned", set = "abandoned" }
+                }
+            },
+
+            -- 1015
+            {
+                id = "prompts_sandy_house3",
+                name = "House 1015",
+                coords = vec3(1353.875, 3598.896, 35.84079),
+                adminOnly = false,
+                defaults = {
+                    sets = {
+                        "wallframe1",
+                        "windowframe1",
+                        "doorframe2",
+                        "bathroomlight",
+                        "livingroomlight",
+                        "kitchenlight",
+                        "bedroomlight",
+                        "bathroom2",
+                        "bedroom2",
+                        "bath1",
+                    }
+                },
+                entitySets = {
+                    { label = "Bathroom Light",    set = "bathroomlight" },
+                    { label = "Living Room Light", set = "livingroomlight" },
+                    { label = "Kitchen Light",     set = "kitchenlight" },
+                    { label = "Bedroom Light",     set = "bedroomlight" },
+                    { label = "Bathroom 1",        set = "bathroom1" },
+                    { label = "Bathroom 2",        set = "bathroom2" },
+                    { label = "Bathroom 3",        set = "bathroom3" },
+                    { label = "Bedroom 1",         set = "bedroom1" },
+                    { label = "Bedroom 2",         set = "bedroom2" },
+                    { label = "Bedroom 3",         set = "bedroom3" },
+                    { label = "Bedroom 4",         set = "bedroom4" },
+                    { label = "Bathroom Set 1",    set = "bath1" },
+                    { label = "Bathroom Set 2",    set = "bath2" },
+                    { label = "Bedroom Dirt",      set = "bedroomdirt" },
+                    { label = "Living Room Dirt",  set = "livingroomdirt" },
+                    { label = "Kitchen Dirt",      set = "kitchendirt" },
+                    { label = "Door Frame 1",      set = "doorframe1" },
+                    { label = "Door Frame 2",      set = "doorframe2" },
+                    { label = "Window Frame 1",    set = "windowframe1" },
+                    { label = "Window Frame 2",    set = "windowframe2" },
+                    { label = "Wall Frame 1",      set = "wallframe1" },
+                    { label = "Wall Frame 2",      set = "wallframe2" },
+                    { label = "Upper Frame",       set = "upframe" },
+                },
+                presets = {
+                    {
+                        label = "Clean",
+                        sets = {
+                            "wallframe1",
+                            "windowframe1",
+                            "doorframe2",
+                            "bathroomlight",
+                            "livingroomlight",
+                            "kitchenlight",
+                            "bedroomlight",
+                            "bathroom2",
+                            "bedroom2",
+                            "bath1",
+                        },
+                        ipls = {}
+                    },
+                    {
+                        label = "Dirty",
+                        sets = {
+                            "wallframe1",
+                            "windowframe1",
+                            "doorframe2",
+                            "bathroomlight",
+                            "livingroomlight",
+                            "kitchenlight",
+                            "bedroomlight",
+                            "bathroom2",
+                            "bedroom2",
+                            "bath1",
+                            "bedroomdirt",
+                            "livingroomdirt",
+                            "kitchendirt",
+                        },
+                        ipls = {}
+                    },
+                    {
+                        label = "Lights Off",
+                        sets = {
+                            "wallframe1",
+                            "windowframe1",
+                            "doorframe2",
+                            "bathroom2",
+                            "bedroom2",
+                            "bath1",
+                            "bedroomdirt",
+                            "livingroomdirt",
+                            "kitchendirt",
+                        },
+                        ipls = {}
+                    }
+                }
+            },
+
+            -- 1016
             {
                 id = "prompts_sandy_house8",
-                name = "House 8",
+                name = "House 1016",
                 coords = vec3(1384.889, 3610.139, 35.468),
                 adminOnly = false,
                 defaults = {
@@ -899,302 +1258,12 @@ Config.InteriorFolders = {
                     }
                 }
             },
-            {
-                id = "prompts_sandy_house9",
-                name = "House 9",
-                coords = vec3(1827.661, 3738.009, 32.46845),
-                adminOnly = false,
-                defaults = {
-                    sets = {
-                        "wallframe2",
-                        "windowframe2",
-                        "doorframe1",
-                        "bathroomlight",
-                        "livingroomlight",
-                        "kitchenlight",
-                        "bedroomlight",
-                        "halllight",
-                        "bathroom2",
-                        "bedroom3",
-                        "bath1",
-                    }
-                },
-                entitySets = {
-                    { label = "Bathroom Light",    set = "bathroomlight" },
-                    { label = "Living Room Light", set = "livingroomlight" },
-                    { label = "Kitchen Light",     set = "kitchenlight" },
-                    { label = "Bedroom Light",     set = "bedroomlight" },
-                    { label = "Hall Light",        set = "halllight" },
-                    { label = "Bathroom 1",        set = "bathroom1" },
-                    { label = "Bathroom 2",        set = "bathroom2" },
-                    { label = "Bedroom 1",         set = "bedroom1" },
-                    { label = "Bedroom 2",         set = "bedroom2" },
-                    { label = "Bedroom 3",         set = "bedroom3" },
-                    { label = "Bathroom Set 1",    set = "bath1" },
-                    { label = "Bathroom Set 2",    set = "bath2" },
-                    { label = "Bedroom Dirt",      set = "bedroomdirt" },
-                    { label = "Living Room Dirt",  set = "livingroomdirt" },
-                    { label = "Kitchen Dirt",      set = "kitchendirt" },
-                    { label = "Hall Dirt",         set = "halldirt" },
-                    { label = "Door Frame 1",      set = "doorframe1" },
-                    { label = "Door Frame 2",      set = "doorframe2" },
-                    { label = "Window Frame 1",    set = "windowframe1" },
-                    { label = "Window Frame 2",    set = "windowframe2" },
-                    { label = "Wall Frame 1",      set = "wallframe1" },
-                    { label = "Wall Frame 2",      set = "wallframe2" },
-                },
-                presets = {
-                    {
-                        label = "Clean",
-                        sets = {
-                            "wallframe2",
-                            "windowframe2",
-                            "doorframe1",
-                            "bathroomlight",
-                            "livingroomlight",
-                            "kitchenlight",
-                            "bedroomlight",
-                            "halllight",
-                            "bathroom2",
-                            "bedroom3",
-                            "bath1",
-                        },
-                        ipls = {}
-                    },
-                    {
-                        label = "Dirty",
-                        sets = {
-                            "wallframe2",
-                            "windowframe2",
-                            "doorframe1",
-                            "bathroomlight",
-                            "livingroomlight",
-                            "kitchenlight",
-                            "bedroomlight",
-                            "halllight",
-                            "bathroom2",
-                            "bedroom3",
-                            "bath1",
-                            "bedroomdirt",
-                            "livingroomdirt",
-                            "kitchendirt",
-                            "halldirt",
-                        },
-                        ipls = {}
-                    },
-                    {
-                        label = "Lights Off",
-                        sets = {
-                            "wallframe2",
-                            "windowframe2",
-                            "doorframe1",
-                            "bathroom2",
-                            "bedroom3",
-                            "bath1",
-                            "bedroomdirt",
-                            "livingroomdirt",
-                            "kitchendirt",
-                            "halldirt",
-                        },
-                        ipls = {}
-                    }
-                }
-            },
-            {
-                id = "prompts_sandy_house10",
-                name = "House 10",
-                coords = vec3(1677.48, 3653.435, 37.39836),
-                adminOnly = false,
-                defaults = {
-                    sets = {
-                        "wallframe1",
-                        "windowframe1",
-                        "doorframe2",
-                        "bathroomlight",
-                        "livingroomlight",
-                        "kitchenlight",
-                        "bedroomlight",
-                        "halllight",
-                        "bathroom1",
-                        "bath2",
-                    }
-                },
-                entitySets = {
-                    { label = "Bathroom Light",    set = "bathroomlight" },
-                    { label = "Living Room Light", set = "livingroomlight" },
-                    { label = "Kitchen Light",     set = "kitchenlight" },
-                    { label = "Bedroom Light",     set = "bedroomlight" },
-                    { label = "Hall Light",        set = "halllight" },
-                    { label = "Bathroom 1",        set = "bathroom1" },
-                    { label = "Bathroom 2",        set = "bathroom2" },
-                    { label = "Bedroom 1",         set = "bedroom1" },
-                    { label = "Bedroom 2",         set = "bedroom2" },
-                    { label = "Bedroom 3",         set = "bedroom3" },
-                    { label = "Bathroom Set 1",    set = "bath1" },
-                    { label = "Bathroom Set 2",    set = "bath2" },
-                    { label = "Bedroom Dirt",      set = "bedroomdirt" },
-                    { label = "Living Room Dirt",  set = "livingroomdirt" },
-                    { label = "Kitchen Dirt",      set = "kitchendirt" },
-                    { label = "Hall Dirt",         set = "halldirt" },
-                    { label = "Door Frame 1",      set = "doorframe1" },
-                    { label = "Door Frame 2",      set = "doorframe2" },
-                    { label = "Window Frame 1",    set = "windowframe1" },
-                    { label = "Window Frame 2",    set = "windowframe2" },
-                    { label = "Wall Frame 1",      set = "wallframe1" },
-                    { label = "Wall Frame 2",      set = "wallframe2" },
-                },
-                presets = {
-                    {
-                        label = "Clean",
-                        sets = {
-                            "wallframe1",
-                            "windowframe1",
-                            "doorframe2",
-                            "bathroomlight",
-                            "livingroomlight",
-                            "kitchenlight",
-                            "bedroomlight",
-                            "halllight",
-                            "bathroom1",
-                            "bath2",
-                        },
-                        ipls = {}
-                    },
-                    {
-                        label = "Dirty",
-                        sets = {
-                            "wallframe1",
-                            "windowframe1",
-                            "doorframe2",
-                            "bathroomlight",
-                            "livingroomlight",
-                            "kitchenlight",
-                            "bedroomlight",
-                            "halllight",
-                            "bathroom1",
-                            "bedroomdirt",
-                            "bath2",
-                            "livingroomdirt",
-                            "kitchendirt",
-                            "halldirt",
-                        },
-                        ipls = {}
-                    },
-                    {
-                        label = "Lights Off",
-                        sets = {
-                            "wallframe1",
-                            "windowframe1",
-                            "doorframe2",
-                            "bathroom1",
-                            "bedroomdirt",
-                            "bath2",
-                            "livingroomdirt",
-                            "kitchendirt",
-                            "halldirt",
-                        },
-                        ipls = {}
-                    }
-                }
-            },
-            {
-                id = "rck_senora_apps",
-                name = "Senora Apartments",
-                coords = vec3(1735.229, 3877.322, 37.781),
-                adminOnly = false,
-                defaults = {
-                    sets = {
-                        "default"
-                    }
-                },
-                entitySets = {
-                    { label = "Default",       set = "default" },
-                    { label = "Furniture",     set = "furniture" },
-                    { label = "Hash 47D6D9CB", set = "hash_47D6D9CB" }
-                },
-                presets = {
-                    {
-                        label = "Clean",
-                        sets = {
-                            "default"
-                        },
-                        ipls = {}
-                    },
-                    {
-                        label = "Furnished",
-                        sets = {
-                            "default",
-                            "furniture"
-                        },
-                        ipls = {}
-                    }
-                }
-            },
-            {
-                id = "rck_senora_apps_b",
-                name = "Senora Apartments B",
-                coords = vec3(1705.158, 3853.854, 37.889),
-                adminOnly = false,
-                defaults = {
-                    sets = {
-                        "default"
-                    }
-                },
-                entitySets = {
-                    { label = "Default",       set = "default" },
-                    { label = "Furniture",     set = "furniture" },
-                    { label = "Hash 47D6D9CB", set = "hash_47D6D9CB" }
-                },
-                presets = {
-                    {
-                        label = "Clean",
-                        sets = {
-                            "default"
-                        },
-                        ipls = {}
-                    },
-                    {
-                        label = "Furnished",
-                        sets = {
-                            "default",
-                            "furniture"
-                        },
-                        ipls = {}
-                    }
-                }
-            },
-            {
-                id = "va_house11_interior",
-                name = "VA House 11",
-                coords = vec3(1667.42, 3677.586, 35.58788),
-                adminOnly = false,
-                defaults = {
-                    sets = { "default" }
-                },
-                entitySets = {
-                    { label = "Default",   set = "default" },
-                    { label = "Furniture", set = "furniture" },
-                    { label = "Abandoned", set = "abandoned" }
-                }
-            },
-            {
-                id = "va_house12_interior",
-                name = "VA House 12",
-                coords = vec3(1434.828, 3627.759, 37.83353),
-                adminOnly = false,
-                defaults = {
-                    sets = { "default" }
-                },
-                entitySets = {
-                    { label = "Default",   set = "default" },
-                    { label = "Furniture", set = "furniture" },
-                    { label = "Abandoned", set = "abandoned" }
-                }
-            },
+
+            -- 1017
             {
                 id = "va_house13_interior",
-                name = "VA House 13",
-                coords = vec3(1434.823, 3627.772, 37.84808),
+                name = "House 1017",
+                coords = vec3(1417.6886, 3623.1379, 35.3741),
                 adminOnly = false,
                 defaults = {
                     sets = { "default" }
@@ -1206,10 +1275,12 @@ Config.InteriorFolders = {
                     { label = "Abandoned",      set = "abandoned" }
                 }
             },
+
+            -- 1018
             {
-                id = "va_house14_interior",
-                name = "VA House 14",
-                coords = vec3(1337.252, 3636.468, 35.40242),
+                id = "va_house12_interior",
+                name = "House 1018",
+                coords = vec3(1444.6708, 3625.4817, 36.1723),
                 adminOnly = false,
                 defaults = {
                     sets = { "default" }
@@ -1220,34 +1291,6 @@ Config.InteriorFolders = {
                     { label = "Abandoned", set = "abandoned" }
                 }
             },
-            {
-                id = "va_h15_interior",
-                name = "VA House 15",
-                coords = vec3(1366.957, 3645.899, 34.68516),
-                adminOnly = false,
-                defaults = {
-                    sets = { "default" }
-                },
-                entitySets = {
-                    { label = "Default",   set = "default" },
-                    { label = "Furniture", set = "furniture" },
-                    { label = "Abandoned", set = "abandoned" }
-                }
-            },
-            {
-                id = "va_h16_interior",
-                name = "VA House 16",
-                coords = vec3(1394.258, 3655.665, 35.85954),
-                adminOnly = false,
-                defaults = {
-                    sets = { "default" }
-                },
-                entitySets = {
-                    { label = "Default",   set = "default" },
-                    { label = "Furniture", set = "furniture" },
-                    { label = "Abandoned", set = "abandoned" }
-                }
-            }
         }
     },
     {

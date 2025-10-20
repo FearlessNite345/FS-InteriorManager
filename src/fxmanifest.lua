@@ -4,7 +4,7 @@ lua54 'yes'
 
 author 'FearlessStudios'
 description 'FS-InteriorManager by FearlessStudios'
-version '1.4.0'
+version '1.4.1'
 
 escrow_ignore 'config.lua'
 
