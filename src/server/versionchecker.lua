@@ -2,12 +2,6 @@ ResourceName = "FS-InteriorManager"
 GithubRepo = "FearlessNite345/FS-InteriorManager"
 
 function VersionCheck()
-    if not ResourceName or not GithubRepo then
-        exports['FS-Lib']:LogMessage(GetInvokingResource(),
-            ResourceName and 'GithubRepo param in VersionCheck is nil' or 'ResourceName param in VersionCheck is nil')
-        return
-    end
-
     local finalName = ('^3[%s] ^7'):format(ResourceName)
     --local header = "^5--- Version Info ---"
     local changelogHeader = '^5------------------- Changelog v%s ------------------ '
@@ -150,7 +144,7 @@ function VersionCheck()
                     ('Current version: %s'):format(currentVersion),
                     ('Latest version: %s'):format(latestVersion),
                     statusMessage,
-                    '^3Update available: You can download it from https://portal.cfx.re/'
+                    '^3Update available: You can download it from https://github.com/FearlessNite345/FS-InteriorManager/releases/latest'
                 }
 
                 printVersion(messages)

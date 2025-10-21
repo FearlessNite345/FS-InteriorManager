@@ -1,3 +1,8 @@
+# Changelog v1.4.3
+- Fixed version checker incorrectly telling you to download from the portal instead of GitHub  
+- Fixed fxmanifest.lua having the wrong version which caused it to always say an update was needed  
+- Added a new feature where the interiors picker automatically collapses when one is selected, giving much more space for the interior details
+
 # Changelog v1.4.2
 - FS-Lib is no longer required for this script to function and it now runs completely standalone
 

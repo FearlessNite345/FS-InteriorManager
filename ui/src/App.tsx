@@ -95,6 +95,9 @@ export default function App() {
   const [openedFolders, setOpenedFolders] = useState<string[]>([]);
   const [presetHoverIdx, setPresetHoverIdx] = useState<number | null>(null);
 
+  // collapsible picker
+  const [pickerOpen, setPickerOpen] = useState(true);
+
   // Measure "chrome" (everything above the details scroller)
   const chromeRef = useRef<HTMLDivElement>(null);
   const [chromeH, setChromeH] = useState(0);
@@ -117,6 +120,82 @@ export default function App() {
     handleNuiCallback("applyPreset", { id: i.id, sets: p.sets, ipls: p.ipls });
   };
 
+  /* ---------------------------- Data shaping ---------------------------- */
+  const topLevel = useMemo<Interior[]>(() => snap?.interiors ?? [], [snap]);
+  const folders = useMemo<Folder[]>(() => snap?.folders ?? [], [snap]);
+
+  const flattenedAll: WithFolder[] = useMemo(() => {
+    if (!snap) return [];
+    const a: WithFolder[] = [...topLevel.map((i) => ({ ...i }))];
+    for (const f of folders)
+      for (const i of f.interiors) a.push({ ...i, __folder: f.name });
+    return a;
+  }, [topLevel, folders, snap]);
+
+  const searching = query.trim().length > 0;
+
+  type Row =
+    | { type: "folder"; name: string; count: number; opened: boolean }
+    | { type: "interior"; item: WithFolder; indent: number };
+
+  const rows: Row[] = useMemo(() => {
+    const r: Row[] = [];
+    if (searching) {
+      const q = query.trim().toLowerCase();
+      flattenedAll
+        .filter(
+          (i) =>
+            (i.name.toLowerCase().includes(q) ||
+              (i.__folder?.toLowerCase().includes(q) ?? false)) &&
+            !i.adminOnly
+        )
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .forEach((i) => r.push({ type: "interior", item: i, indent: 0 }));
+      return r;
+    }
+    topLevel
+      .filter((i) => !i.adminOnly)
+      .forEach((i) => r.push({ type: "interior", item: i, indent: 0 }));
+    for (const f of folders) {
+      const filtered = f.interiors.filter((it) => !it.adminOnly);
+      if (filtered.length === 0) continue;
+      const opened = openedFolders.includes(f.name);
+      r.push({ type: "folder", name: f.name, count: filtered.length, opened });
+      if (opened)
+        for (const it of filtered)
+          r.push({
+            type: "interior",
+            item: { ...it, __folder: f.name },
+            indent: 12,
+          });
+    }
+    return r;
+  }, [flattenedAll, topLevel, folders, openedFolders, searching, query]);
+
+  const visibleInteriors: WithFolder[] = useMemo(
+    () =>
+      rows
+        .filter((r) => r.type === "interior")
+        .map((r) => (r as any).item as WithFolder),
+    [rows]
+  );
+
+  const indexById = useMemo(() => {
+    const map = new Map<string, number>();
+    visibleInteriors.forEach((i, idx) => map.set(i.id, idx));
+    return map;
+  }, [visibleInteriors]);
+
+  // ACTIVE — declare this BEFORE any usage below
+  const active: WithFolder | null = useMemo(
+    () =>
+      activeId ? flattenedAll.find((i) => i.id === activeId) ?? null : null,
+    [flattenedAll, activeId]
+  );
+
+  const canUse = (i?: Interior | null) =>
+    !!i && (snap?.allowed || !i?.adminOnly);
+
   /* --------------------------- NUI events --------------------------- */
   useNuiEvent<{ payload: Snapshot }>("open", (data) => {
     setSnap(data.payload);
@@ -126,6 +205,7 @@ export default function App() {
     setHoverIdx(null);
     setOpenedFolders([]);
     setUiHasFocus(true);
+    setPickerOpen(true);
     setTimeout(() => searchRef.current?.focus(), 30);
   });
   useNuiEvent<undefined>("close", () => {
@@ -136,6 +216,7 @@ export default function App() {
     setHoverIdx(null);
     setOpenedFolders([]);
   });
+  // FIX: add the missing '>' in the generic type
   useNuiEvent<{ id: string; state: Record<string, boolean> }>(
     "stateUpdate",
     (data) => {
@@ -174,9 +255,7 @@ export default function App() {
 
       const moveFlat = (dir: 1 | -1) => {
         setUsingKeys(true);
-        // Choose list: while searching, navigate search results; otherwise full list
         const list = searching ? visibleInteriors : flattenedAll;
-        // Determine current position within chosen list
         const currentId = activeId ?? visibleInteriors[cursor]?.id ?? null;
         const curIdx = currentId
           ? list.findIndex((i) => i.id === currentId)
@@ -185,7 +264,6 @@ export default function App() {
         const next = list[nextIdx];
         if (next) {
           setActiveId(next.id);
-          // If already visible, sync cursor immediately for smoother highlight
           const maybeIdx = indexById.get(next.id);
           if (maybeIdx !== undefined) setCursor(maybeIdx);
         }
@@ -207,71 +285,6 @@ export default function App() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open, cursor]); // eslint-disable-line
-
-  /* ---------------------------- Data shaping ---------------------------- */
-  const topLevel = useMemo<Interior[]>(() => snap?.interiors ?? [], [snap]);
-  const folders = useMemo<Folder[]>(() => snap?.folders ?? [], [snap]);
-
-  const flattenedAll: WithFolder[] = useMemo(() => {
-    if (!snap) return [];
-    const a: WithFolder[] = [...topLevel.map((i) => ({ ...i }))];
-    for (const f of folders)
-      for (const i of f.interiors) a.push({ ...i, __folder: f.name });
-    return a;
-  }, [topLevel, folders, snap]);
-
-  const searching = query.trim().length > 0;
-
-  type Row =
-    | { type: "folder"; name: string; count: number; opened: boolean }
-    | { type: "interior"; item: WithFolder; indent: number };
-
-  const rows: Row[] = useMemo(() => {
-    const r: Row[] = [];
-    if (searching) {
-      const q = query.trim().toLowerCase();
-      flattenedAll
-        .filter(
-          (i) =>
-            i.name.toLowerCase().includes(q) ||
-            (i.__folder?.toLowerCase().includes(q) ?? false)
-        )
-        .forEach((i) => r.push({ type: "interior", item: i, indent: 0 }));
-      return r;
-    }
-    topLevel.forEach((i) => r.push({ type: "interior", item: i, indent: 0 }));
-    for (const f of folders) {
-      const opened = openedFolders.includes(f.name);
-      r.push({
-        type: "folder",
-        name: f.name,
-        count: f.interiors.length,
-        opened,
-      });
-      if (opened)
-        for (const it of f.interiors)
-          r.push({
-            type: "interior",
-            item: { ...it, __folder: f.name },
-            indent: 12,
-          });
-    }
-    return r;
-  }, [flattenedAll, topLevel, folders, openedFolders, searching, query]);
-
-  const visibleInteriors: WithFolder[] = useMemo(
-    () =>
-      rows
-        .filter((r) => r.type === "interior")
-        .map((r) => (r as any).item as WithFolder),
-    [rows]
-  );
-
-  const indexById = useMemo(() => {
-    const map = new Map<string, number>();
-    visibleInteriors.forEach((i, idx) => map.set(i.id, idx));
-    return map;
-  }, [visibleInteriors]);
 
   useEffect(() => {
     if (!visibleInteriors.length) {
@@ -305,22 +318,12 @@ export default function App() {
     itemRefs.current[cursor]?.scrollIntoView({ block: "nearest" });
   }, [cursor]);
 
-  // Keep cursor aligned with the activeId when it becomes visible
+  // Auto-collapse picker when an item is active and not searching
   useEffect(() => {
-    if (!activeId) return;
-    const idx = indexById.get(activeId);
-    if (idx !== undefined) setCursor(idx);
-  }, [activeId, indexById]);
+    if (active && !searching) setPickerOpen(false);
+    if (!active || searching) setPickerOpen(true);
+  }, [active, searching]);
 
-  /* Active always from full set (not only visible) */
-  const active: WithFolder | null = useMemo(
-    () =>
-      activeId ? flattenedAll.find((i) => i.id === activeId) ?? null : null,
-    [flattenedAll, activeId]
-  );
-
-  const canUse = (i?: Interior | null) =>
-    !!i && (snap?.allowed || !i?.adminOnly);
   if (!open) return null;
 
   /* ----------------------------- Actions ----------------------------- */
@@ -365,8 +368,8 @@ export default function App() {
           display: "flex",
           alignItems: "center",
           gap: 8,
-          padding: "6px 10px",
-          height: 30,
+          padding: "4px 8px",
+          height: 28,
           borderRadius: UI.radiusMd,
           cursor: "pointer",
           userSelect: "none",
@@ -377,14 +380,14 @@ export default function App() {
         }}
       >
         <IconChevronDown
-          size={14}
+          size={12}
           style={{
             transform: `rotate(${opened ? 180 : 0}deg)`,
             transition: "transform 140ms",
             opacity: 0.9,
           }}
         />
-        <Text size="sm" fw={700} style={{ letterSpacing: 0.2 }}>
+        <Text size="xs" fw={700} style={{ letterSpacing: 0.2 }}>
           {name}
         </Text>
         <div style={{ flex: 1 }} />
@@ -414,8 +417,6 @@ export default function App() {
       : "transparent";
     const shadow = isActive
       ? "inset 0 0 0 1px rgba(80,140,255,.65)"
-      : isHover
-      ? "inset 0 0 0 1px rgba(255,255,255,.06)"
       : "inset 0 0 0 1px rgba(255,255,255,.06)";
 
     return (
@@ -437,8 +438,8 @@ export default function App() {
           display: "flex",
           alignItems: "center",
           gap: 8,
-          padding: "6px 10px",
-          height: 30,
+          padding: "4px 8px",
+          height: 28,
           borderRadius: UI.radiusMd,
           marginLeft: indent,
           cursor: "pointer",
@@ -450,7 +451,7 @@ export default function App() {
         }}
       >
         <Text
-          size="sm"
+          size="xs"
           fw={isActive ? 700 : 500}
           style={{
             whiteSpace: "nowrap",
@@ -489,8 +490,8 @@ export default function App() {
         onMouseEnter={() => setPresetHoverIdx(idx)}
         onMouseLeave={() => setPresetHoverIdx(null)}
         onClick={() => {
-          if (disabled) return;
-          applyPresetAndRemember(active!, p.label);
+          if (disabled || !active) return;
+          applyPresetAndRemember(active, p.label);
         }}
         style={{
           display: "flex",
@@ -572,7 +573,6 @@ export default function App() {
         bottom: 24,
         right: 24,
         width: 380,
-        // height is defined by top/bottom to add spacing
         zIndex: 9999,
         pointerEvents: "auto",
       }}
@@ -582,7 +582,6 @@ export default function App() {
         radius={UI.radiusLg}
         withBorder
         style={{
-          // no fixed height; shrink-wrap until capped
           maxHeight: "inherit",
           height: "100%",
           display: "flex",
@@ -596,7 +595,7 @@ export default function App() {
       >
         {/* Measured chrome (header/search/picker/summary/divider) */}
         <div ref={chromeRef}>
-          <Stack gap="xs" style={{ padding: 10 }}>
+          <Stack gap={8} style={{ padding: 10 }}>
             {/* Header */}
             <Group justify="space-between" align="center">
               <Group gap={8} align="center">
@@ -604,7 +603,7 @@ export default function App() {
                   {snap?.title ?? "Interior Manager"}
                 </Text>
               </Group>
-              <Group gap="xs">
+              <Group gap={6}>
                 <Tooltip label="Toggle focus (Left Alt)" zIndex={15000}>
                   <SegmentedControl
                     size="xs"
@@ -644,6 +643,7 @@ export default function App() {
                 </Tooltip>
                 <Tooltip label="Close (Esc)" zIndex={15000}>
                   <ActionIcon
+                    size="sm"
                     color="red"
                     variant="filled"
                     radius="xl"
@@ -663,6 +663,7 @@ export default function App() {
               placeholder="Search interiors…"
               value={query}
               radius="xl"
+              size="xs"
               variant="filled"
               rightSection={
                 query ? (
@@ -694,57 +695,40 @@ export default function App() {
                 },
               }}
             />
-            <Box
-              style={{
-                background: UI.panelElevated,
-                border: `1px solid ${UI.stroke}`,
-                borderRadius: UI.radiusMd,
-                padding: 8,
-                boxShadow: "inset 0 0 0 1px rgba(255,255,255,.06)",
-              }}
-            >
-              <Stack gap={6}>
-                <Text
-                  size="xs"
-                  fw={700}
-                  c={UI.textDim}
-                  style={{ letterSpacing: 0.3 }}
-                >
-                  Shortcuts
-                </Text>
+
+            {/* Shortcuts (hide when searching or after selecting) */}
+            {!searching && !active && (
+              <Box
+                style={{
+                  background: UI.panelElevated,
+                  border: `1px solid ${UI.stroke}`,
+                  borderRadius: UI.radiusMd,
+                  padding: 6,
+                  boxShadow: "inset 0 0 0 1px rgba(255,255,255,.06)",
+                }}
+              >
                 <Box
                   style={{
-                    background: UI.glass,
-                    border: `1px solid ${UI.stroke}`,
-                    borderRadius: UI.radiusMd,
-                    padding: 6,
-                    boxShadow: "inset 0 0 0 1px rgba(255,255,255,.06)",
-                    overflow: "hidden",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: 6,
+                    flexWrap: "nowrap",
+                    width: "100%",
                   }}
                 >
-                  <Box
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      gap: 6,
-                      flexWrap: "nowrap",
-                      width: "100%",
-                    }}
-                  >
-                    {ShortcutChip("↑/↓", "Navigate")}
-                    {ShortcutChip("L-Alt", "Focus")}
-                    {ShortcutChip("Esc", "Close")}
-                  </Box>
+                  {ShortcutChip("↑/↓", "Navigate")}
+                  {ShortcutChip("L-Alt", "Focus")}
+                  {ShortcutChip("Esc", "Close")}
                 </Box>
-              </Stack>
-            </Box>
+              </Box>
+            )}
 
-            {/* Picker */}
+            {/* Picker - collapsible */}
             <Card
               withBorder
               radius="lg"
-              p={8}
+              p={6}
               style={{
                 flex: "0 0 auto",
                 background: UI.panelElevated,
@@ -753,31 +737,66 @@ export default function App() {
                 overflow: "hidden",
               }}
             >
-              <ScrollArea.Autosize
-                mah="clamp(148px, 28vh, 260px)"
-                offsetScrollbars
-                onMouseLeave={() => setHoverIdx(null)}
-                onMouseMove={() => setUsingKeys(false)}
-                style={{ padding: 2 }}
-                scrollbarSize={8}
-                type="auto"
+              {/* Compact header to toggle picker */}
+              <Group
+                onClick={() => setPickerOpen((p) => !p)}
+                gap={8}
+                align="center"
+                style={{
+                  cursor: "pointer",
+                  userSelect: "none",
+                  padding: "2px 2px",
+                }}
               >
-                <Stack gap={6}>
-                  {rows.map((r) =>
-                    r.type === "folder"
-                      ? FolderRow(r.name, r.count, r.opened)
-                      : InteriorRow(
-                          (r as any).item as WithFolder,
-                          (r as any).indent as number
-                        )
-                  )}
-                  {rows.length === 0 && (
-                    <Text c="dimmed" size="sm" px="xs" py={4}>
-                      No matches
-                    </Text>
-                  )}
-                </Stack>
-              </ScrollArea.Autosize>
+                <IconChevronDown
+                  size={12}
+                  style={{
+                    transform: `rotate(${pickerOpen ? 180 : 0}deg)`,
+                    transition: "transform 140ms",
+                    opacity: 0.9,
+                  }}
+                />
+                <Text size="xs" fw={700} style={{ letterSpacing: 0.3 }}>
+                  Interiors
+                </Text>
+                <Badge size="xs" variant="light">
+                  {visibleInteriors.length || flattenedAll.length}
+                </Badge>
+                <div style={{ flex: 1 }} />
+                {active && (
+                  <Badge size="xs" variant="outline">
+                    Selected: {active.name}
+                  </Badge>
+                )}
+              </Group>
+
+              {pickerOpen && (
+                <ScrollArea.Autosize
+                  mah="clamp(96px, 22vh, 200px)"
+                  offsetScrollbars
+                  onMouseLeave={() => setHoverIdx(null)}
+                  onMouseMove={() => setUsingKeys(false)}
+                  style={{ padding: 2 }}
+                  scrollbarSize={8}
+                  type="auto"
+                >
+                  <Stack gap={6}>
+                    {rows.map((r) =>
+                      r.type === "folder"
+                        ? FolderRow(r.name, r.count, r.opened)
+                        : InteriorRow(
+                            (r as any).item as WithFolder,
+                            (r as any).indent as number
+                          )
+                    )}
+                    {rows.length === 0 && (
+                      <Text c="dimmed" size="sm" px="xs" py={4}>
+                        No matches
+                      </Text>
+                    )}
+                  </Stack>
+                </ScrollArea.Autosize>
+              )}
             </Card>
 
             {/* Active summary */}
@@ -840,7 +859,7 @@ export default function App() {
           </Stack>
         </div>
 
-        {/* Details scroller – cap at viewport minus spacing and chrome */}
+        {/* Details scroller */}
         <ScrollArea.Autosize
           mah={`calc(100vh - 48px - ${chromeH}px)`}
           type="auto"
