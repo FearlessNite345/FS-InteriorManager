@@ -47,6 +47,3 @@ RegisterNetEvent("interiors:checkPerms:request", function()
     local allowed = IsPlayerAceAllowed(src, Config.acePermissionForAdmin) == 1
     TriggerClientEvent("interiors:checkPerms:response", src, allowed)
 end)
-
-
-exports['FS-Lib']:VersionCheck('FS-InteriorManager', 'fearlessnite345/FS-InteriorManager')

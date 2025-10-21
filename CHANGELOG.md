@@ -1,3 +1,6 @@
+# Changelog v1.4.2
+- FS-Lib is no longer required for this script to function and it now runs completely standalone
+
 # Changelog v1.4.1
 - Renamed all Prompts Sandy Shores houses to match the numbers displayed on each property.
 - Fixed an issue where two different houses were teleporting to the same location (House 1018). The duplicate now correctly points to House 1017.

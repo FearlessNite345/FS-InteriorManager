@@ -20,7 +20,3 @@ ui_page 'nui/index.html'
 shared_scripts {
     'config.lua'
 }
-
-dependencies {
-    'FS-Lib'
-}
