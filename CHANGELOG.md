@@ -1,3 +1,6 @@
+# Changelog v1.4.4
+- Fixed an issue where interiors marked as `adminOnly` were incorrectly hidden from all players, including admins. These interiors now appear properly in the picker and HUD for admins, while still remaining hidden from non-admins.
+
 # Changelog v1.4.3
 - Fixed version checker incorrectly telling you to download from the portal instead of GitHub  
 - Fixed fxmanifest.lua having the wrong version which caused it to always say an update was needed  

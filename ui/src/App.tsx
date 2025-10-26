@@ -147,17 +147,17 @@ export default function App() {
           (i) =>
             (i.name.toLowerCase().includes(q) ||
               (i.__folder?.toLowerCase().includes(q) ?? false)) &&
-            !i.adminOnly
+            (snap?.allowed || !i.adminOnly)
         )
         .sort((a, b) => a.name.localeCompare(b.name))
         .forEach((i) => r.push({ type: "interior", item: i, indent: 0 }));
       return r;
     }
     topLevel
-      .filter((i) => !i.adminOnly)
+      .filter((i) => snap?.allowed || !i.adminOnly)
       .forEach((i) => r.push({ type: "interior", item: i, indent: 0 }));
     for (const f of folders) {
-      const filtered = f.interiors.filter((it) => !it.adminOnly);
+      const filtered = f.interiors.filter((it) => snap?.allowed || !it.adminOnly);
       if (filtered.length === 0) continue;
       const opened = openedFolders.includes(f.name);
       r.push({ type: "folder", name: f.name, count: filtered.length, opened });
@@ -763,11 +763,6 @@ export default function App() {
                   {visibleInteriors.length || flattenedAll.length}
                 </Badge>
                 <div style={{ flex: 1 }} />
-                {active && (
-                  <Badge size="xs" variant="outline">
-                    Selected: {active.name}
-                  </Badge>
-                )}
               </Group>
 
               {pickerOpen && (
