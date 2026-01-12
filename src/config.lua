@@ -1263,7 +1263,7 @@ Config.InteriorFolders = {
             {
                 id = "va_house13_interior",
                 name = "House 1017",
-                coords = vec3(1417.6886, 3623.1379, 35.3741),
+                coords = vec3(1434.828, 3627.759, 37.83353),
                 adminOnly = false,
                 defaults = {
                     sets = { "default" }
@@ -1280,7 +1280,7 @@ Config.InteriorFolders = {
             {
                 id = "va_house12_interior",
                 name = "House 1018",
-                coords = vec3(1444.6708, 3625.4817, 36.1723),
+                coords = vec3(1434.823, 3627.772, 37.84808),
                 adminOnly = false,
                 defaults = {
                     sets = { "default" }

@@ -1,3 +1,6 @@
+# Changelog v1.4.5
+- Fixed Prompt House coords for house 1018 & 1017
+
 # Changelog v1.4.4
 - Fixed an issue where interiors marked as `adminOnly` were incorrectly hidden from all players, including admins. These interiors now appear properly in the picker and HUD for admins, while still remaining hidden from non-admins.
 
